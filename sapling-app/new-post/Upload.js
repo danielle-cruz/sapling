@@ -15,13 +15,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 
-export default class Example2 extends React.Component {
+export default class PodsHome extends React.Component {
 
   render() {
     return (
-      <Text>This is an example too!</Text>
+      <View>
+        <Text>Start of the New Post Flow</Text>
+        <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('PodsHome')}>
+            <Text>Press to go to Pods</Text>
+        </TouchableOpacity>
+      </View>
     )
   }
 }
 
-export {Example2}
+export {PodsHome}

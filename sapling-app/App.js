@@ -2,15 +2,20 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+/* Stack Navigator */
 import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
+/* Pods Pages */
+import PodsHome from './pods/PodsHome.js'
 
+/* New Post Pages */
+import Upload from './new-post/Upload.js'
+
+/* Example Pages */
 import Example from './Example.js'
-import Example2 from './Example2.js'
-
 
 export default class App extends React.Component {
 
@@ -32,8 +37,9 @@ export default class App extends React.Component {
           screenOptions={{
             headerShown: true
           }}>
+          <Stack.Screen name='Upload' component={Upload} />
+          <Stack.Screen name='PodsHome' component={PodsHome} />
           <Stack.Screen name='Example' component={Example} />
-          <Stack.Screen name='Example2' component={Example2} />
 
         </Stack.Navigator>
       </NavigationContainer>

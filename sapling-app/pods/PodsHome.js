@@ -15,13 +15,19 @@ import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 
-export default class Example extends React.Component {
+export default class PodsHome extends React.Component {
 
   render() {
     return (
-      <Text>This is an example page!</Text>
+      <View>
+        <Text>Yay this is the pods homepage!</Text>
+        <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('Example')}>
+            <Text>Press to go to Example</Text>
+        </TouchableOpacity>
+      </View>
     )
   }
 }
 
-export {Example}
+export {PodsHome}
