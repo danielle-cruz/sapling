@@ -19,17 +19,6 @@ import Example from './Example.js'
 
 export default class App extends React.Component {
 
-  state = {
-    image_id: null,
-    userNeedsOnboard: true
-  };
-
-  handleOnboarding = (userNeedsOnboardAnswer) => {
-    this.setState({
-      userNeedsOnboard: userNeedsOnboardAnswer
-    })
-  }
-
   render() {
     return (
       <NavigationContainer>

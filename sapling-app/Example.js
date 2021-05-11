@@ -27,7 +27,7 @@ const IMAGES = {
     link: require('./assets/images/ice_cream.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 12',
+    datePosted: new Date()
   },
 
   cake: {
@@ -38,7 +38,7 @@ const IMAGES = {
     link: require('./assets/images/cake.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 10',
+    datePosted: new Date()
   },
 
   sydney: {
@@ -49,7 +49,7 @@ const IMAGES = {
     link: require('./assets/images/sydney.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 9',
+    datePosted: new Date()
   },
   iceCream2: {
     id: 'iceCream2',
@@ -59,7 +59,7 @@ const IMAGES = {
     link: require('./assets/images/ice_cream.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 12',
+    datePosted: new Date()
   },
 
   cake2: {
@@ -70,7 +70,7 @@ const IMAGES = {
     link: require('./assets/images/cake.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 10',
+    datePosted: new Date()
   },
 
   sydney2: {
@@ -81,7 +81,7 @@ const IMAGES = {
     link: require('./assets/images/sydney.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 9',
+    datePosted: new Date()
   },
   iceCream3: {
     id: 'iceCream3',
@@ -91,7 +91,7 @@ const IMAGES = {
     link: require('./assets/images/ice_cream.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
     comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: 'May 12',
+    datePosted: new Date()
   },
 }
 
@@ -142,7 +142,7 @@ export default class Example extends React.Component {
             link:  value.link,
             likes:  value.likes,
             comments:  value.comments,
-            datePosted:  value.datePosted
+            datePosted:  value.datePosted.toDateString().slice(4,10)
           }
         );
       }
