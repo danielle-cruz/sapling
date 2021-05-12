@@ -31,7 +31,7 @@ export default class App extends React.Component {
           }}>
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Upload' component={Upload} />
-          <Stack.Screen name='PodsHome' component={PodsHome} />
+          <Stack.Screen name='PodsHome' component={PodsHome} options={({ headerShown: false, animationEnabled: false })}/>
           <Stack.Screen name='Example' component={Example} />
 
         </Stack.Navigator>

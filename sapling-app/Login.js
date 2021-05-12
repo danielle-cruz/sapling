@@ -31,6 +31,8 @@ const windowHeight = Dimensions.get('window').height;
 /* Styles */
 import { styles } from './Styles.js';
 
+
+
 let customFonts = {
   'RubikRegular': require('./assets/fonts/Rubik/static/Rubik-Regular.ttf'),
   'RubikBold': require('./assets/fonts/Rubik/static/Rubik-Bold.ttf'),
@@ -79,7 +81,7 @@ export default class Login extends React.Component {
                 {/* Titles */}
                 <View style={styles.titleContainer}>
                   <Image
-                    source={require('./assets/images/sapling-icon.png')}/>
+                    source={require('./assets/icons/sapling-icon.png')}/>
                   <Text style={styles.header1}>Welcome to Sapling!</Text>
                   <Text style={[styles.subtitle, {textAlign: 'center'}]}>A growth-oriented social computing system</Text>
                 </View>

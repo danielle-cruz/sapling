@@ -15,6 +15,16 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
 
+  tileContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    backgroundColor: '#FBF7F2',
+    justifyContent: 'space-around',
+    alignContent: 'flex-start'
+  },
+
   titleContainer: {
     backgroundColor: '#FBF7F2',
     justifyContent: 'center',
@@ -60,6 +70,35 @@ const styles = StyleSheet.create({
     fontFamily: 'RubikRegular',
     fontSize: 14,
   },
+
+  /* Header Bar */
+  headerBar: {
+    padding: 30,
+    paddingBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-between',
+    backgroundColor: '#F1EEE9'
+  },
+
+  /* Icons */
+  barIcons: {
+    flexDirection: 'row'
+  },
+
+  icons: {
+    height: 30,
+    width: 30,
+    margin: 5
+  },
+
+  /* Pods Homepage */
+  podTile: {
+    margin: 10,
+    borderColor:'#A3B92B',
+    borderWidth: 4,
+    borderRadius: 10, 
+  }
 
 });
 

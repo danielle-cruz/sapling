@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import {
     Alert,
+    Dimensions,
     Image,
     Linking,
     Platform,
@@ -18,6 +19,17 @@ import { Assets, createStackNavigator } from '@react-navigation/stack';
 /* Styles */
 import { styles } from '../Styles.js';
 
+/* Components */
+import HeaderBar from '../src/components/HeaderBar'
+import PodTile from '../src/components/PodTile'
+
+/* Dimensions */
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
+
+const PODS = ['Dance', 'Spanish']
+
+
 export default class PodsHome extends React.Component {
   constructor({navigation, route}) {
     super();
@@ -26,16 +38,31 @@ export default class PodsHome extends React.Component {
     }
   }
 
+  renderPodTiles() {
+    let podTiles = [];
+    for (const pod of PODS) {
+      podTiles.push(
+        <PodTile
+          navigation = {this.props.navigation}
+          title={pod}/>
+      )
+    }
+    return podTiles;
+  }
+
 
   render() {
+    let podTiles = this.renderPodTiles();
     return (
       <View style={styles.container}>
-        <Text style={styles.header1}>Yay this is the pods homepage!</Text>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => this.props.navigation.navigate('Example')}>
-            <Text>Press to go to Example</Text>
-        </TouchableOpacity>
+        {/* Header Bar */}
+        <HeaderBar navigation = {this.props.navigation} title={this.state.username}/>
+        <View style={[styles.tileContainer, {padding: windowWidth / 20}]}>
+
+          {/* Titles */}
+          {podTiles}
+
+        </View>
       </View>
     )
   }
