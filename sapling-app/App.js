@@ -8,6 +8,9 @@ import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
 
+/* Login Pages */
+import Login from './Login.js'
+
 /* Pods Pages */
 import PodsHome from './pods/PodsHome.js'
 
@@ -26,6 +29,7 @@ export default class App extends React.Component {
           screenOptions={{
             headerShown: true
           }}>
+          <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Upload' component={Upload} />
           <Stack.Screen name='PodsHome' component={PodsHome} />
           <Stack.Screen name='Example' component={Example} />

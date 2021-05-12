@@ -17,109 +17,33 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
-
-const IMAGES = {
-  iceCream: {
-    id: 'iceCream',
-    poster: 'Dani',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/ice_cream.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-
-  cake: {
-    id: 'cake',
-    poster: 'Gianna',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/cake.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-
-  sydney: {
-    id: 'sydney',
-    poster: 'Sydney',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/sydney.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-  iceCream2: {
-    id: 'iceCream2',
-    poster: 'Dani',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/ice_cream.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-
-  cake2: {
-    id: 'cake2',
-    poster: 'Gianna',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/cake.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-
-  sydney2: {
-    id: 'sydney2',
-    poster: 'Sydney',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/sydney.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-  iceCream3: {
-    id: 'iceCream3',
-    poster: 'Dani',
-    pod1: true,
-    pod2: false,
-    link: require('./assets/images/ice_cream.jpg'),
-    likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
-    datePosted: new Date()
-  },
-}
+import { IMAGES } from './IMAGES.js'
 
 export default class Example extends React.Component {
 
   constructor(props){
     super(props);
     this.state = {
-      tree_health: Object.keys(IMAGES).length 
+      tree_health: Object.keys(IMAGES).length
     }
   }
 
   renderLeaf(orientation){
     if(orientation == 'left'){
-      if(this.state.tree_health >= 5) { 
+      if(this.state.tree_health >= 5) {
           return  <Image style={{position:'absolute', marginTop:50,}}source = {require('./assets/full_tree/full_left_leaf.png')}/>
       }else if(this.state.tree_health >= 3){
-          return <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/good_tree/good_left_leaf.png')}/> 
+          return <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/good_tree/good_left_leaf.png')}/>
       } else if(this.state.tree_health >= 1){
           return  <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/fair_tree/fair_left_leaf.png')}/>
       }
           return <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/poor_tree/poor_left_leaf.png')}/>
     }
     if(orientation == 'right'){
-      if(this.state.tree_health >= 5) { 
+      if(this.state.tree_health >= 5) {
           return  <Image style={{position:'absolute', marginTop:50,}}source = {require('./assets/full_tree/full_right_leaf.png')}/>
       }else if(this.state.tree_health >=3){
-          return <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/good_tree/good_right_leaf.png')}/> 
+          return <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/good_tree/good_right_leaf.png')}/>
       } else if(this.state.tree_health >= 1){
           return  <Image style={{position:'absolute', marginTop:50, marginLeft:0}}source = {require('./assets/fair_tree/fair_right_leaf.png')}/>
       }
@@ -204,8 +128,8 @@ export default class Example extends React.Component {
     return (
       <SafeAreaView style={{width:'100%'}}>
       <ScrollView >
-        
-      
+
+
       {this.state.tree_health >= 5 ?
            <View>
            <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/full_tree/full_tree_top.png')}></Image>
@@ -213,7 +137,7 @@ export default class Example extends React.Component {
            {imageViews}
            </ImageBackground>
            </View>
-           
+
            :
       this.state.tree_health >= 3 ?
             <View>
@@ -222,7 +146,7 @@ export default class Example extends React.Component {
             {imageViews}
             </ImageBackground>
             </View>
-           : 
+           :
       this.state.tree_health >= 1 ?
             <View>
             <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/fair_tree/fair_tree_top.png')}></Image>
