@@ -37,7 +37,8 @@ export default class SinglePost extends React.Component {
     super();
     this.state = {
       curImage: route.params.image,
-      liked: false
+      liked: false,
+      username: route.params.username
     }
   }
 
@@ -48,17 +49,30 @@ export default class SinglePost extends React.Component {
 
   renderComments = () => {
     let commentViews = []
-    for (let value of this.state.curImage.comments) {
+    for (let [key,value] of Object.entries(this.state.curImage.comments)) {
       commentViews.unshift(
-          <Text style={{marginBottom: 30}}>{value}</Text>
-      );
+        <View style={{flexDirection:"column", marginBottom: 30}}>
+        <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, justifyContent:'space-between'}}>
+        <Text style={{fontWeight: '600', }}>{value.username}</Text> 
+        <Text style={{marginLeft:10, fontSize:10, marginTop:3}}>{value.comment_date.toDateString().slice(4,10)}</Text> 
+        </View>
+        <Text style={{}}>{value.text}</Text>
+        </View>
+  );
     }
     return commentViews
   }
 
   handleSubmit = () => {
     Keyboard.dismiss();
-    this.state.curImage.comments.push(this.state.curComment)
+    let newComment = {};
+    newComment.text = this.state.curComment;
+    newComment.username = this.state.username;
+    newComment.likes = 0;
+    newComment.reported= false;
+    newComment.post_id= "post_id";
+    newComment.comment_date= new Date();
+    this.state.curImage.comments.push(newComment)
     this.setState({curImage: this.state.curImage, curComment:""})
   }
 

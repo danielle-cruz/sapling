@@ -26,7 +26,8 @@ export default class Example extends React.Component {
   constructor({route, navigation}){
     super();
     this.state = {
-      tree_health: Object.keys(IMAGES).length - 1
+      tree_health: Object.keys(IMAGES).length - 1,
+      username: route.params.username,
     }
   }
 
@@ -94,7 +95,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('left')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage})}> 
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  username: this.state.username})}> 
                 <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}source = {curImage.link}/>
                 </TouchableOpacity>
                 </View>
@@ -115,7 +116,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage})}> 
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, username: this.state.username})}> 
                 <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}}source = {curImage.link}/>
                 </TouchableOpacity>
                 </View>

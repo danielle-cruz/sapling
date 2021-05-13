@@ -44,7 +44,9 @@ export default class PodsHome extends React.Component {
       podTiles.push(
         <PodTile
           navigation = {this.props.navigation}
-          title={pod}/>
+          title={pod}
+          username= {this.state.username}
+          />
       )
     }
     return podTiles;
