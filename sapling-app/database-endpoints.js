@@ -1,10 +1,10 @@
-// !!! RUN THESE COMMANDS FIRST !!!
-// npm install --global yarn
-// expo install firebase
-// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/* !!! RUN THESE COMMANDS FIRST !!!
+* npm install --global yarn
+* expo install firebase
+* NOTE: These are ASYNCHRONOUS functions. Promises will be returned!
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 import firebase from 'firebase/app'
 
-// Optionally import the services that you want to use
 //import "firebase/auth";
 //import "firebase/database";
 import "firebase/firestore";
@@ -26,8 +26,14 @@ const storage = firebase.storage();
 const storage_ref = storage.ref();
 
 
-// Gets the user with specific username.
-// If the user doesn't exist yet, create a new user object.
+/*
+* Returns a Promise of the user object specified by the inputted username.
+* User object contains user_id, username, list of liked comments (ids), and list of liked posts (ids).
+* If the user doesn't exist yet, creates a new user object.
+*
+* In the case of several users with the same username, no guarantees are made about
+* which will be returned.
+*/ 
 export async function getUser(username){
   const users = db.collection("users");
   const user = await users.where("username", "==", username).get();
@@ -37,23 +43,30 @@ export async function getUser(username){
       liked_comments: [],
       liked_posts: []
     }
-    users.add(data);
+    let new_user_data = await users.add(data);
+    data.user_id = new_user_data.id;
     return data;
   }
 
+  let single_user;
   user.forEach(doc =>{
-    console.log(doc.id, "=>", doc.data());
-    return doc.data();
+    single_user = doc.data();
+    single_user.user_id = doc.id;
   });
+  return single_user;
 }
 
 
-// Takes a json as input. Needed fields:
-// title - string
-// text - string
-// accomplished_date - timestamp
-// username - string
-// pod_name - string
+/*
+* Stores a new post in the database. Returns Promise of the id of the post.
+*
+* Takes an object (dictionary) as input. Expected fields:
+* title: string
+* text: string
+* accomplished_date: timestamp  (this is NOT necessarily the date posted)
+* username: string
+* pod_name: string
+*/
 export async function makePost(post_json) {
   const post = await db.collection("posts").add({
     title: post_json["title"],
@@ -64,38 +77,55 @@ export async function makePost(post_json) {
     likes: 0,
     reported: false,
     pod_name: post_json["pod_name"],
-    //media_ref: "", //FIX LATER
+    //media_ref: "", // TODO: add in image storage capabilities
     post_date: firebase.firestore.Timestamp.fromDate(new Date())
   });
   return post.id;
 }
 
 
-// Returns a list of all posts that haven't been reported for posts in pod_name
-// This returns an array of post OBJECTs
-// To get the id of a specific post "post", use post.id
-// To get the json of info, use post.data()
+/* 
+* Returns a Promise containing a dictionary obj in the form:
+* { post_id_1 : post_data_1, post_id_2 : post_data_2, ... }
+* where post_data is another obj containing the fields described in makePost,
+* plus info about number of likes, etc.
+* Only non-reported posts from the inputted pod_name are returned.
+* Look at the firestore database through https://console.firebase.google.com/
+* for more details.
+*
+* Example usage: To resolve (get the value of) the returned Promise:
+*   let posts = getPosts('dance');
+*   posts.then((result) => {
+*     console.log("Success", result);
+*     Do whatever with the result
+*   }).catch((error) => {
+*     console.log("Error", error);
+*   })
+*/
 export async function getPosts(pod_name){
   const posts = await db.collection("posts").where("reported", "==", false).where("pod_name", "==", pod_name).get();
-  let all_posts = [];
+  let all_posts = {};
   posts.forEach(doc => {
-    all_posts.push(doc);
+    all_posts[doc.id] = doc.data();
   });
   return all_posts;
 }
 
 // TODO: Finish and test image functionality
 export async function getMedia(post_id){
-  const post = await db.collection("posts").doc(post_id);
+  const post = db.collection("posts").doc(post_id);
   return post.data().media_ref.getDownloadURL();
 }
 
 
-
-// Takes a json as input. Needed fields:
-// text - string
-// username - string
-// post_id - string
+/*
+* Stores a new comment in the database. Returns Promise of the comment id.
+*
+* Takes an object (dictionary) as input. Expected fields:
+* text: string
+* username: string
+* post_id: string
+*/
 export async function makeComment(comment_json) {
   const comment = await db.collection("comments").add({
     text: comment_json["text"],
@@ -106,65 +136,107 @@ export async function makeComment(comment_json) {
     comment_date: firebase.firestore.Timestamp.fromDate(new Date())
   })
 
-  let post = await db.collection("posts").doc(comment_json["post_id"]);
+  let post = db.collection("posts").doc(comment_json["post_id"]);
   post.update({comment_ids: firebase.firestore.FieldValue.arrayUnion(comment.id)});
 
   return comment.id;
 }
 
 
-// Returns a list of comment JSONs
-// TODO: Include comment ID
+/* 
+* Returns a Promise containing a dictionary obj in the form:
+* { comment_id_1 : comment_data_1, comment_id_2 : comment_data_2, ... }
+* where comment_data is another obj containing the fields described in makeComment,
+* plus info about number of likes, etc.
+* Only non-reported comments from the inputted post_id are returned.
+* Look at the firestore database through https://console.firebase.google.com/
+* for more details.
+*/
 export async function getComments(post_id){
   const post = await db.collection("posts").doc(post_id).get();
-  let comments = [];
+  let comments = {};
   let comment_ids = post.data().comment_ids;
   for(var i = 0; i < comment_ids.length; i++){
     let comment_id = comment_ids[i];
     let comment_data = await db.collection("comments").doc(comment_id).get();
-    comments.push(comment_data.data());
+    if (!comment_data.data().reported) {
+      comments[comment_data.id] = comment_data.data();
+    }
   }
   return comments;
 }
 
-// TODO: Functionality so already liked comments get unliked
-// TODO: Fix bugs
-// Likes a comment and marks comment as liked for user with user_id
+
+/*
+* Updates database to reflect user_id clicking the like button for comment_id.
+*
+* If the user has not liked the comment yet, then increases the comment like count
+* and updates the list of the user's liked comments to include comment_id.
+* If the user has already liked the comment, then performs "unlike" action: decreases
+* the comment like count and removes comment_id from the list of the user's liked comments.
+*/
 export async function likeComment(comment_id, user_id){
-  let comment = await db.collection("comments").doc(comment_id).get();
-
+  let comment_doc = db.collection("comments").doc(comment_id);
+  let comment = await comment_doc.get();
   let curr_likes = comment.data().likes;
-  comment.update({likes: curr_likes + 1});
 
-  let user = await db.collection("users").doc(user_id);
-  user.update({liked_comments: firebase.firestore.FieldValue.arrayUnion(comment.id)});
+  let user_doc = db.collection("users").doc(user_id);
+  let user = await user_doc.get();
+  if (user.data().liked_comments.includes(comment_id)) {
+    user_doc.update({liked_comments: firebase.firestore.FieldValue.arrayRemove(comment.id)});
+    comment_doc.update({likes: curr_likes - 1})
+  } else {
+    user_doc.update({liked_comments: firebase.firestore.FieldValue.arrayUnion(comment.id)});
+    comment_doc.update({likes: curr_likes + 1});
+  }
 }
 
 
-// TODO: Functionality so already liked posts get unliked
-// TODO: Fix bugs
-// Likes a post and marks post as liked for user with user_id
+/*
+* Updates database to reflect user_id clicking the like button for post_id.
+*
+* If the user has not liked the post yet, then increases the post like count
+* and updates the list of the user's liked posts to include post_id.
+* If the user has already liked the post, then performs "unlike" action: decreases
+* the post like count and removes post_id from the list of the user's liked posts.
+*/
 export async function likePost(post_id, user_id){
-  let post = await db.collection("posts").doc(post_id);
+  let post_doc = db.collection("posts").doc(post_id);
+  let post = await post_doc.get();
+  let curr_likes = post.data().likes;
 
-  curr_likes = post.data().likes;
-  post.update({likes: curr_likes + 1});
-
-  let user = await db.collection("users").doc(user_id);
-  user.update({liked_posts: firebase.firestore.FieldValue.arrayUnion(post.id)});
+  let user_doc = db.collection("users").doc(user_id);
+  let user = await user_doc.get();
+  if (user.data().liked_posts.includes(post_id)) {
+    user_doc.update({liked_posts: firebase.firestore.FieldValue.arrayRemove(post.id)});
+    post_doc.update({likes: curr_likes - 1})
+  } else {
+    user_doc.update({liked_posts: firebase.firestore.FieldValue.arrayUnion(post.id)});
+    post_doc.update({likes: curr_likes + 1});
+  }
 }
 
-// TODO: test
-// Reports a comment
+
+/*
+* Reports the comment specified by comment_id. This comment
+* will no longer be returned by getComments.
+*
+* Undoing a report must be done manually via the firebase console.
+*/
 export async function reportComment(comment_id){
-  let comment = await db.collection("comments").doc(comment_id);
+  let comment = db.collection("comments").doc(comment_id);
   comment.update({reported: true});
 }
 
-// TODO: test
-// Reports a post
+
+/*
+* Reports the post specified by post_id. This post
+* will no longer be returned by getPosts.
+*
+* Undoing a report must be done manually via the firebase console.
+*/
 export async function reportPost(post_id){
-  let post = await db.collection("posts").doc(post_id);
+  let post = db.collection("posts").doc(post_id);
   post.update({reported: true});
 }
 
