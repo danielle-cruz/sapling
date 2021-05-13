@@ -18,13 +18,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 import { IMAGES } from './IMAGES.js'
+import {SinglePost} from './SinglePost.js'
 
 export default class Example extends React.Component {
 
-  constructor(props){
-    super(props);
+  constructor({route, navigation}){
+    super({route, navigation});
     this.state = {
-      tree_health: Object.keys(IMAGES).length
+      tree_health: Object.keys(IMAGES).length - 1
     }
   }
 
@@ -57,6 +58,7 @@ export default class Example extends React.Component {
     let images = [];
     for (const [key, value] of Object.entries(IMAGES)) {
       if (value.pod1 === true) {
+
         images.push(
           {
             id: value.id,
@@ -94,7 +96,9 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('left')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage})}> 
                 <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}source = {curImage.link}/>
+                </TouchableOpacity>
                 </View>
             </View>
           );
@@ -113,7 +117,9 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage})}> 
                 <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}}source = {curImage.link}/>
+                </TouchableOpacity>
                 </View>
             </View>
           );

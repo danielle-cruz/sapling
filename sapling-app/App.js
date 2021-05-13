@@ -20,6 +20,9 @@ import Upload from './new-post/Upload.js'
 /* Example Pages */
 import Example from './Example.js'
 
+/* Single Post Pages */
+import SinglePost from './SinglePost.js'
+
 export default class App extends React.Component {
 
   render() {
@@ -33,6 +36,7 @@ export default class App extends React.Component {
           <Stack.Screen name='Upload' component={Upload} />
           <Stack.Screen name='PodsHome' component={PodsHome} options={({ headerShown: false, animationEnabled: false })}/>
           <Stack.Screen name='Example' component={Example} />
+          <Stack.Screen name='SinglePost' component={SinglePost} />
 
         </Stack.Navigator>
       </NavigationContainer>
