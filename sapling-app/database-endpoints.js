@@ -114,6 +114,7 @@ export async function makeComment(comment_json) {
 
 
 // Returns a list of comment JSONs
+// TODO: Include comment ID
 export async function getComments(post_id){
   const post = await db.collection("posts").doc(post_id).get();
   let comments = [];
@@ -166,3 +167,5 @@ export async function reportPost(post_id){
   let post = await db.collection("posts").doc(post_id);
   post.update({reported: true});
 }
+
+// TODO: add calculate tree health
