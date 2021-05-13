@@ -43,7 +43,7 @@ export default class PodTile extends React.Component {
   }
 
   handleTile() {
-    this.props.navigation.navigate('Example', {username: this.props.username})
+    this.props.navigation.navigate('Example', {username: this.props.username, pod_name: this.props.title})
   }
 
 

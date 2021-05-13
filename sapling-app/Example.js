@@ -26,6 +26,7 @@ export default class Example extends React.Component {
   constructor({route, navigation}){
     super();
     this.state = {
+      pod_name: route.params.pod_name,
       tree_health: Object.keys(IMAGES).length - 1,
       username: route.params.username,
     }

@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 /* Stack Navigator */
-import { NavigationContainer } from '@react-navigation/native';
+import { getPathFromState, NavigationContainer, TabRouter, useRoute } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 const Stack = createStackNavigator();
@@ -35,8 +35,8 @@ export default class App extends React.Component {
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Upload' component={Upload} />
           <Stack.Screen name='PodsHome' component={PodsHome} options={({ headerShown: false, animationEnabled: false })}/>
-          <Stack.Screen name='Example' component={Example} />
-          <Stack.Screen name='SinglePost' component={SinglePost} />
+          <Stack.Screen name='Example' component={Example} options={({ headerTitle: "Pod Activity",headerBackTitle: "Back"})} />
+          <Stack.Screen name='SinglePost' component={SinglePost} options={({ headerTitle: ""})} />
 
         </Stack.Navigator>
       </NavigationContainer>

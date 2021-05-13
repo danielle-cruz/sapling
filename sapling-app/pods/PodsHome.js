@@ -27,7 +27,7 @@ import PodTile from '../src/components/PodTile'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const PODS = ['Dance', 'Spanish']
+const PODS = ['Dance', 'Spanish', 'Example']
 
 
 export default class PodsHome extends React.Component {
