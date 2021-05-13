@@ -10,6 +10,8 @@
   "dependencies": {
     "@expo-google-fonts/dev": "^0.1.0",
     "@expo-google-fonts/rubik": "^0.1.0",
+    "@material-ui/core": "^4.11.4",
+    "@material-ui/icons": "^4.11.2",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",

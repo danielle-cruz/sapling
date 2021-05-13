@@ -6,6 +6,7 @@ import {
     Linking,
     Platform,
     StyleSheet,
+    Keyboard,
     Text,
     TouchableOpacity,
     View,
@@ -23,7 +24,7 @@ import {SinglePost} from './SinglePost.js'
 export default class Example extends React.Component {
 
   constructor({route, navigation}){
-    super({route, navigation});
+    super();
     this.state = {
       tree_health: Object.keys(IMAGES).length - 1
     }
@@ -57,8 +58,6 @@ export default class Example extends React.Component {
   renderLeafNodes(){
     let images = [];
     for (const [key, value] of Object.entries(IMAGES)) {
-      if (value.pod1 === true) {
-
         images.push(
           {
             id: value.id,
@@ -71,7 +70,6 @@ export default class Example extends React.Component {
             datePosted:  value.datePosted.toDateString().slice(4,10)
           }
         );
-      }
     }
      // Sort images by date in feed
     images.sort(function(a, b) {

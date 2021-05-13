@@ -58,6 +58,30 @@ const styles = StyleSheet.create({
 
   },
 
+  commentTextInput: {
+    paddingTop:18,
+    marginLeft:10,
+  },
+
+  commentPostButton: {
+    height: 32, 
+    width: 60,
+    marginTop: 18,
+    padding: 5,
+    paddingTop:9,
+    backgroundColor: '#A3B92B',
+    borderRadius: 10,
+    textAlign:'center',
+    textAlignVertical:'center'
+  },
+
+  commentPostButtonLabel: {
+    color: '#FFFFFF',
+    fontFamily: 'RubikBold',
+    fontSize: 12,
+    textAlign: 'center'
+  },
+
   textInput: {
     margin: 10,
     padding: 15,

@@ -6,7 +6,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/ice_cream.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
 
@@ -17,7 +17,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/cake.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
 
@@ -28,7 +28,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/sydney.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
   iceCream2: {
@@ -38,7 +38,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/ice_cream.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
 
@@ -49,7 +49,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/cake.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
 
@@ -60,7 +60,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/sydney.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
   iceCream3: {
@@ -70,7 +70,7 @@ const IMAGES = {
     pod2: false,
     link: require('./assets/images/ice_cream.jpg'),
     likes: Math.floor(Math.random() * Math.floor(300)),
-    comments: Math.floor(Math.random() * Math.floor(25)),
+    comments: ["love this!", "so cute", "cool stuff"],
     datePosted: new Date()
   },
 }
