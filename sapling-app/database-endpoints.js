@@ -240,4 +240,23 @@ export async function reportPost(post_id){
   post.update({reported: true});
 }
 
-// TODO: add calculate tree health
+
+/*
+* Calculates tree health on a scale from 0-5 based on how many
+* posts were made in the last 5 days (exactly 5 days before current time).
+*/
+export async function calculateTreeHealth(pod_name) {
+  let five_days_ago = new Date();
+  five_days_ago.setDate(five_days_ago.getDate() - 5);
+  const posts = await db.collection("posts").where("reported", "==", false)
+                                            .where("pod_name", "==", pod_name)
+                                            .where("post_date", ">=", five_days_ago).get();
+  let num_posts = 0;
+  posts.forEach(doc => {
+    num_posts++;
+  });
+  if (num_posts > 5) {
+    num_posts = 5;
+  }
+  return num_posts;
+}
