@@ -64,10 +64,9 @@ export default class Example extends React.Component {
     
     let posts = databaseFunctions.getPosts('dance');
     posts.then((result) => {
-      console.log(result);
       let images = [];
     for (const [key,value] of Object.entries(result)) {
-      console.log(value); 
+
         images.push(
           {
             id: key,
@@ -77,16 +76,14 @@ export default class Example extends React.Component {
             poster: value.username,
             likes: value.likes,
             reported: value.reported,
-            datePosted: value.post_date.toString(),
+            datePosted: value.post_date.toDate().toDateString().slice(4,10),
             pod: value.pod_name,
-            link:  require('./assets/images/ice_cream.jpg'),
+            link: value.media_url? value.media_url : "https://firebasestorage.googleapis.com/v0/b/sapling-grow.appspot.com/o/IMG_1135.jpeg?alt=media&token=85b0ad5d-84f0-4213-a6cc-3e147d45d17c",
             likes:  value.likes,
             comments:  value.comment_ids,
           }
         );
     }
-
-    
 
     let imageViews = [];
     for(let i = 0; i < images.length; i++){
@@ -107,7 +104,7 @@ export default class Example extends React.Component {
               {this.renderLeaf('left')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  username: this.state.username})}> 
-                <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}source = {curImage.link}/>
+                <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}uri = {curImage.link}/>
                 </TouchableOpacity>
                 </View>
             </View>
@@ -119,7 +116,7 @@ export default class Example extends React.Component {
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', marginLeft:65, flexDirection:'row'}}>
-                    <Image style={{width:10, height:10, marginTop:1.5}}source = {require('./assets/defaults/profile.png')}/>
+                    <Image style={{width:10, height:10, marginTop:1.5}}uri = {require('./assets/defaults/profile.png')}/>
                     <Text style={{fontSize:10, marginLeft:3}}>{curImage.poster}</Text>
                   </View>
                   <Text style={{fontSize:10, alignSelf:'flex-end'}}>{curImage.datePosted}</Text>
@@ -128,14 +125,15 @@ export default class Example extends React.Component {
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, username: this.state.username})}> 
-                <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}}source = {curImage.link}/>
+                <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}}uri = {curImage.link}/>
                 </TouchableOpacity>
                 </View>
             </View>
           );
         }
     }
-    return imageViews;
+    this.setState({imageViews: imageViews})
+    return;
   }).catch((error) => {
     console.log("Error", error);
    })
@@ -154,7 +152,7 @@ export default class Example extends React.Component {
            <View>
            <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/full_tree/full_tree_top.png')}></Image>
            <ImageBackground  resizeMode="stretch" style={{alignSelf:'center', marginLeft: 30, marginRight: 30, width: 350, height:'100%'}} source = {require('./assets/full_tree/full_tree_trunk.png')}>
-           {imageViews}
+           {this.state.imageViews}
            </ImageBackground>
            </View>
 
