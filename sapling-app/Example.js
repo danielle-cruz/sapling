@@ -70,13 +70,14 @@ export default class Example extends React.Component {
       console.log(value); 
         images.push(
           {
+            id: key,
             title: value.title,
             text: value.text,
             accomplished_date: value.accomplished_date, 
             poster: value.username,
             likes: value.likes,
             reported: value.reported,
-            datePosted: value.post_date.toDateString().slice(4,10),
+            datePosted: value.post_date.toString(),
             pod: value.pod_name,
             link:  require('./assets/images/ice_cream.jpg'),
             likes:  value.likes,
@@ -93,7 +94,7 @@ export default class Example extends React.Component {
         if(i % 2 == 0){
           imageViews.push(
             /** left leaf node*/
-            <View  style={{ alignSelf:'flex-start',marginLeft:5, marginBottom:30}}>
+            <View  key = {curImage.key} style={{ alignSelf:'flex-start',marginLeft:5, marginBottom:30}}>
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
@@ -114,7 +115,7 @@ export default class Example extends React.Component {
         } else {
           imageViews.push(
             /** right leaf node*/
-            <View style={{ alignSelf:'flex-end',marginRight:15, marginBottom:30}}>
+            <View key = {curImage.key} style={{ alignSelf:'flex-end',marginRight:15, marginBottom:30}}>
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', marginLeft:65, flexDirection:'row'}}>
