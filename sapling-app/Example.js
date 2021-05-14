@@ -64,10 +64,9 @@ export default class Example extends React.Component {
     
     let posts = databaseFunctions.getPosts('dance');
     posts.then((result) => {
-      DBposts = result
-      console.log(DBposts);
+      console.log(result);
       let images = [];
-    for (const [key,value] of Object.entries(DBposts)) {
+    for (const [key,value] of Object.entries(result)) {
       console.log(value); 
         images.push(
           {
