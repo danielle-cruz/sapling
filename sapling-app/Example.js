@@ -20,6 +20,7 @@ import { HeaderBackButton } from '@react-navigation/stack';
 import { Assets, createStackNavigator } from '@react-navigation/stack';
 import { IMAGES } from './IMAGES.js'
 import {SinglePost} from './SinglePost.js'
+let databaseFunctions = require('./database-endpoints.js');
 
 export default class Example extends React.Component {
 
@@ -55,28 +56,37 @@ export default class Example extends React.Component {
     }
 
   }
+  
+ 
 
 
   renderLeafNodes(){
-    let images = [];
-    for (const [key, value] of Object.entries(IMAGES)) {
+    
+    let posts = databaseFunctions.getPosts('dance');
+    posts.then((result) => {
+      DBposts = result
+      console.log(DBposts);
+      let images = [];
+    for (const [key,value] of Object.entries(DBposts)) {
+      console.log(value); 
         images.push(
           {
-            id: value.id,
-            poster:  value.poster,
-            pod1:  value.pod1,
-            pod2: value.pod2,
-            link:  value.link,
+            title: value.title,
+            text: value.text,
+            accomplished_date: value.accomplished_date, 
+            poster: value.username,
+            likes: value.likes,
+            reported: value.reported,
+            datePosted: value.post_date.toDateString().slice(4,10),
+            pod: value.pod_name,
+            link:  require('./assets/images/ice_cream.jpg'),
             likes:  value.likes,
-            comments:  value.comments,
-            datePosted:  value.datePosted.toDateString().slice(4,10)
+            comments:  value.comment_ids,
           }
         );
     }
-     // Sort images by date in feed
-    images.sort(function(a, b) {
-      return b.datePosted - a.datePosted;
-    });
+
+    
 
     let imageViews = [];
     for(let i = 0; i < images.length; i++){
@@ -84,7 +94,7 @@ export default class Example extends React.Component {
         if(i % 2 == 0){
           imageViews.push(
             /** left leaf node*/
-            <View key = {curImage.id} style={{ alignSelf:'flex-start',marginLeft:5, marginBottom:30}}>
+            <View  style={{ alignSelf:'flex-start',marginLeft:5, marginBottom:30}}>
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
@@ -105,7 +115,7 @@ export default class Example extends React.Component {
         } else {
           imageViews.push(
             /** right leaf node*/
-            <View key = {curImage.id} style={{ alignSelf:'flex-end',marginRight:15, marginBottom:30}}>
+            <View style={{ alignSelf:'flex-end',marginRight:15, marginBottom:30}}>
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', marginLeft:65, flexDirection:'row'}}>
@@ -126,6 +136,10 @@ export default class Example extends React.Component {
         }
     }
     return imageViews;
+  }).catch((error) => {
+    console.log("Error", error);
+   })
+    
   }
 
   render() {
