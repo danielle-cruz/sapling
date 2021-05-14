@@ -31,6 +31,7 @@ export default class Example extends React.Component {
       tree_health: Object.keys(IMAGES).length - 1,
       username: route.params.username,
     }
+
   }
 
   renderLeaf(orientation){
@@ -61,14 +62,20 @@ export default class Example extends React.Component {
       return nextProps.id !== this.props.id;
  }
 
+ fetchPosts(){
+  let posts = databaseFunctions.getPosts(this.state.pod_name.toLowerCase());
+  posts.then((result) => {
+    this.setState({postsList: result})
+  }).catch((error) => {
+    console.log("Error", error);
+   })
+ }
+
 
   renderLeafNodes(){
     console.log(this.state.pod_name.toLowerCase());
-    let posts = databaseFunctions.getPosts(this.state.pod_name.toLowerCase());
-    posts.then((result) => {
-      let images = [];
-    for (const [key,value] of Object.entries(result)) {
-
+    if(this.state.postsList == null) return;
+    for (const [key,value] of Object.entries(this.state.postsList)) {
         images.push(
           {
             id: key,
@@ -134,12 +141,7 @@ export default class Example extends React.Component {
           );
         }
     }
-    this.setState({imageViews: imageViews})
-    return;
-  }).catch((error) => {
-    console.log("Error", error);
-   })
-    
+    return imageViews;
   }
 
   render() {
