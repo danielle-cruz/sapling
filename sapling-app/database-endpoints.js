@@ -1,15 +1,16 @@
 /* !!! RUN THESE COMMANDS FIRST !!!
 * npm install --global yarn
 * expo install firebase
+* npm install uuid
 * NOTE: These are ASYNCHRONOUS functions. Promises will be returned!
 * !!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
 import firebase from 'firebase/app'
-
 //import "firebase/auth";
 //import "firebase/database";
 import "firebase/firestore";
 //import "firebase/functions";
 import "firebase/storage";
+import { v4 as uuidv4 } from 'uuid';
 
 // Initialize Firebase
 const firebaseConfig = {
@@ -66,8 +67,17 @@ export async function getUser(username){
 * accomplished_date: timestamp  (this is NOT necessarily the date posted)
 * username: string
 * pod_name: string
+* media_file: File or Blob
 */
 export async function makePost(post_json) {
+  let new_media_ref = storage_ref.child(uuidv4());  // provide random filename
+  await new_media_ref.put(post_json["media_file"]);
+  let url = await new_media_ref.getDownloadURL();
+
+  // TODO: test media upload more thoroughly
+  // currently, something is wrong w/ files uploaded, but could be use of fetch for testing
+  // TODO: figure out how to differentiate media types
+
   const post = await db.collection("posts").add({
     title: post_json["title"],
     text: post_json["text"],
@@ -77,7 +87,7 @@ export async function makePost(post_json) {
     likes: 0,
     reported: false,
     pod_name: post_json["pod_name"],
-    //media_ref: "", // TODO: add in image storage capabilities
+    media_url: url,
     post_date: firebase.firestore.Timestamp.fromDate(new Date())
   });
   return post.id;
@@ -92,6 +102,9 @@ export async function makePost(post_json) {
 * Only non-reported posts from the inputted pod_name are returned.
 * Look at the firestore database through https://console.firebase.google.com/
 * for more details.
+*
+* The image/video is stored in the media_url field of each post. This should
+* be a download url that can be used directly (as the src) within html tags.
 *
 * Example usage: To resolve (get the value of) the returned Promise:
 *   let posts = getPosts('dance');
@@ -109,12 +122,6 @@ export async function getPosts(pod_name){
     all_posts[doc.id] = doc.data();
   });
   return all_posts;
-}
-
-// TODO: Finish and test image functionality
-export async function getMedia(post_id){
-  const post = db.collection("posts").doc(post_id);
-  return post.data().media_ref.getDownloadURL();
 }
 
 
