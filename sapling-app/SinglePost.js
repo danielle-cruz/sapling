@@ -89,7 +89,7 @@ export default class SinglePost extends React.Component {
                   </View>
                   <Text style={{fontSize:16, alignSelf:'flex-end'}}>{this.state.curImage.datePosted}</Text>
                 </View>
-           <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source = {this.state.curImage.link}></Image>
+           <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
            <View style={{width: 350, flexDirection:'row', justifyContent:'space-between', marginBottom:15, alignSelf:'center'}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
                   {this.state.liked?

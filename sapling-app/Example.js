@@ -57,11 +57,14 @@ export default class Example extends React.Component {
 
   }
   
- 
+ shouldComponentUpdate(nextProps, nextState){
+      return nextProps.id !== this.props.id;
+ }
 
 
   renderLeafNodes(){
-    let posts = databaseFunctions.getPosts('dance');
+    console.log(this.state.pod_name.toLowerCase());
+    let posts = databaseFunctions.getPosts(this.state.pod_name.toLowerCase());
     posts.then((result) => {
       let images = [];
     for (const [key,value] of Object.entries(result)) {
