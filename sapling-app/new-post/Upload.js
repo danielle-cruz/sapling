@@ -34,6 +34,10 @@ import { styles } from '../Styles.js';
 /* Image Picker */
 import * as ImagePicker from 'expo-image-picker';
 
+/* Database Endpoinst */
+let databaseFunctions = require('../database-endpoints.js');
+
+
 
 export default class Upload extends React.Component {
   constructor({navigation, route}) {
@@ -70,6 +74,34 @@ export default class Upload extends React.Component {
     if (!result.cancelled) {
       this.setState({ image: result.uri })
     }
+  }
+
+  /*
+  * Stores a new post in the database. Returns Promise of the id of the post.
+  *
+  * Takes an object (dictionary) as input. Expected fields:
+  * title: string
+  * text: string
+  * accomplished_date: timestamp  (this is NOT necessarily the date posted)
+  * username: string
+  * pod_name: string
+  * media_file: File or Blob
+  */
+  uploadPost() {
+    console.log('uploaded');
+    console.log(this.state.image);
+    databaseFunctions.makePost(
+      {
+        title: this.state.title,
+        text: this.state.text,
+        accomplished_date: Date.now(),
+        username: this.state.username,
+        pod_name: 'example_pod_name',
+        media_file: this.state.image
+      }
+    );
+    // NEED TO ADD DATE AND PODNAME
+
   }
 
   render() {
@@ -110,6 +142,13 @@ export default class Upload extends React.Component {
                   onPress={() => this.props.navigation.navigate('PodsHome')}>
                   <Text>Press to go to Pods</Text>
               </TouchableOpacity>*/}
+
+              <TouchableOpacity
+                style={[styles.button, {width: '100%'}]}
+                onPress={() => this.uploadPost()}>
+                <Text>Upload</Text>
+              </TouchableOpacity>
+
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>

@@ -10,6 +10,7 @@ import firebase from 'firebase/app'
 import "firebase/firestore";
 //import "firebase/functions";
 import "firebase/storage";
+import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid';
 
 // Initialize Firebase
@@ -34,7 +35,7 @@ const storage_ref = storage.ref();
 *
 * In the case of several users with the same username, no guarantees are made about
 * which will be returned.
-*/ 
+*/
 export async function getUser(username){
   const users = db.collection("users");
   const user = await users.where("username", "==", username).get();
@@ -94,7 +95,7 @@ export async function makePost(post_json) {
 }
 
 
-/* 
+/*
 * Returns a Promise containing a dictionary obj in the form:
 * { post_id_1 : post_data_1, post_id_2 : post_data_2, ... }
 * where post_data is another obj containing the fields described in makePost,
@@ -150,7 +151,7 @@ export async function makeComment(comment_json) {
 }
 
 
-/* 
+/*
 * Returns a Promise containing a dictionary obj in the form:
 * { comment_id_1 : comment_data_1, comment_id_2 : comment_data_2, ... }
 * where comment_data is another obj containing the fields described in makeComment,
