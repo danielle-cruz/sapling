@@ -43,9 +43,9 @@ export default class PodsHome extends React.Component {
     for (const pod of PODS) {
       podTiles.push(
         <PodTile
-          navigation = {this.props.navigation}
+          navigation ={this.props.navigation}
           title={pod}
-          username= {this.state.username}
+          username={this.state.username}
           />
       )
     }
@@ -58,7 +58,7 @@ export default class PodsHome extends React.Component {
     return (
       <View style={styles.container}>
         {/* Header Bar */}
-        <HeaderBar navigation = {this.props.navigation} title={this.state.username}/>
+        <HeaderBar navigation = {this.props.navigation} username={this.state.username}/>
         <View style={[styles.tileContainer, {padding: windowWidth / 20}]}>
 
           {/* Titles */}

@@ -61,7 +61,7 @@ export default class Login extends React.Component {
       Alert.alert('Please enter your username.')
     } else {
       this.props.navigation.navigate('PodsHome', {username: this.state.username})
-      console.log(this.state.username)
+      /*console.log(this.state.username)*/
     }
   }
 

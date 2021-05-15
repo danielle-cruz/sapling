@@ -38,10 +38,6 @@ let customFonts = {
 
 export default class HeaderBar extends React.Component {
 
-  constructor({navigation, route}) {
-    super()
-  }
-
   async _loadFontsAsync() {
     await Font.loadAsync(customFonts).then(() => this.setState({ fontsLoaded: true }))
   }
@@ -51,17 +47,18 @@ export default class HeaderBar extends React.Component {
   }
 
   render() {
+
     return (
       <View style={[styles.headerBar, {height: windowHeight / 8}]}>
         <View style={{flexDirection: 'row'}}>
           <Image
             source={require('../../assets/icons/sapling-icon.png')}
             style={[styles.icons, {resizeMode: 'contain', marginRight: 10}]}/>
-          <Text style={styles.header1}>{this.props.title}</Text>
+          <Text style={styles.header1}>{this.props.username}</Text>
         </View>
         <View style={styles.barIcons}>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('Upload')}>
+            onPress={() => this.props.navigation.navigate('Upload', {username: this.props.username})}>
             <Image
               source={require('../../assets/icons/upload-icon.png')}
               style={styles.icons}/>
