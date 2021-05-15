@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FBF7F2',
+
   },
 
   contentContainer: {
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   },
 
   commentPostButton: {
-    height: 32, 
+    height: 32,
     width: 60,
     marginTop: 18,
     padding: 5,
@@ -121,8 +122,54 @@ const styles = StyleSheet.create({
     margin: 10,
     borderColor:'#A3B92B',
     borderWidth: 4,
-    borderRadius: 10, 
-  }
+    borderRadius: 10,
+  },
+
+  /* New Post Flow */
+  postTitleInput: {
+    margin: 10,
+    padding: 15,
+    fontFamily: 'RubikBold',
+    backgroundColor: '#F1EEE9',
+    fontSize: 36,
+  },
+
+  postTextInput: {
+    margin: 10,
+    padding: 15,
+    fontFamily: 'RubrikRegular',
+    backgroundColor: '#F1EEE9',
+    fontSize: 16,
+  },
+
+  uploadImageButton: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F1EEE9',
+    borderWidth: 3,
+    borderColor: '#C4C4C4',
+    borderRadius: 10
+  },
+
+  /* Headers */
+  headerButton: {
+    fontFamily: 'RubrikBold',
+    padding: 10,
+    paddingTop: 3,
+    paddingBottom:5,
+    margin: 5,
+    marginRight:10,
+    color: '#A3B92B',
+    borderRadius: 10,
+  },
+
+  headerButtonText: {
+    fontFamily: 'RubrikBold',
+    fontSize: 20,
+    color: '#A3B92B',
+    fontWeight: '500',
+  },
 
 });
 

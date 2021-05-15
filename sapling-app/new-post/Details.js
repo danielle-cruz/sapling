@@ -39,14 +39,14 @@ let databaseFunctions = require('../database-endpoints.js');
 
 
 
-export default class Upload extends React.Component {
+export default class Details extends React.Component {
   constructor({navigation, route}) {
     super();
     this.state = {
       username: route.params.username,
-      title: '',
-      text: '',
-      image: null,
+      title: route.params.title,
+      text: route.params.text,
+      image: route.params.image,
     }
   }
 
@@ -114,46 +114,6 @@ export default class Upload extends React.Component {
 
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.contentContainer, {padding: windowWidth / 10, paddingTop: 0}]}>
-              {/* Post Title */}
-              <TextInput
-                style={[styles.postTitleInput, {width: '100%'}]}
-                placeholder = 'Title...'
-                multiline={false}
-                onSubmitEditing = {() => Keyboard.dismiss()}
-                onChangeText = {(text) => this.setState({title: text})}
-              />
-              {/* Upload photo or video from camera roll */}
-              <TouchableOpacity
-                style={[styles.uploadImageButton, {width: '100%', height: undefined, aspectRatio: 1}]}
-                onPress={() => this.pickImage()}>
-                {!this.state.image ?
-                    <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
-                      <Image
-                        style={{width: '20%', height: undefined, aspectRatio: 1, margin: 10, resizeMode: 'contain'}}
-                        source={require('../assets/icons/camera-icon.png')}/>
-                      <Text style={styles.subtitle}>Upload a photo or video</Text>
-                    </View>
-                  :
-                    <Image source={{ uri: this.state.image }} style={{ width: '100%', height: undefined, aspectRatio: 1 }}/>
-                }
-              </TouchableOpacity>
-              {/* Post text / reflection */}
-              <TextInput
-                style={[styles.postTextInput, {width: '100%', height: '20%%'}]}
-                placeholder = 'Add a reflection...'
-                multiline={true}
-                maxHeight={'25%'}
-                maxLength={400}
-                onSubmitEditing = {() => Keyboard.dismiss()}
-                onChangeText = {(text) => this.setState({title: text})}
-              />
-
-              {/*<TouchableOpacity
-                style={[styles.button, {width: '100%'}]}
-                onPress={() => this.uploadPost()}>
-                <Text style={styles.buttonLabel}>Next</Text>
-              </TouchableOpacity>*/}
-
             </View>
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
@@ -162,4 +122,4 @@ export default class Upload extends React.Component {
   }
 }
 
-export {Upload}
+export {Details}
