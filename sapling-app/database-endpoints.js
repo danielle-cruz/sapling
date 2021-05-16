@@ -10,7 +10,6 @@ import firebase from 'firebase/app'
 import "firebase/firestore";
 //import "firebase/functions";
 import "firebase/storage";
-import 'react-native-get-random-values'
 import { v4 as uuidv4 } from 'uuid';
 
 // Initialize Firebase
@@ -21,8 +20,11 @@ const firebaseConfig = {
   projectId: 'sapling-grow',
   storageBucket: 'sapling-grow.appspot.com'
 };
-
-firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}else {
+  firebase.app(); // if already initialized, use that one
+}
 const db = firebase.firestore();
 const storage = firebase.storage();
 const storage_ref = storage.ref();
@@ -35,7 +37,7 @@ const storage_ref = storage.ref();
 *
 * In the case of several users with the same username, no guarantees are made about
 * which will be returned.
-*/
+*/ 
 export async function getUser(username){
   const users = db.collection("users");
   const user = await users.where("username", "==", username).get();
@@ -93,13 +95,14 @@ export async function makePost(post_json) {
     reported: false,
     pod_name: post_json["pod_name"],
     media_url: url,
-    post_date: firebase.firestore.Timestamp.fromDate(new Date())
+    post_date: firebase.firestore.Timestamp.fromDate(new Date()),
   });
+  post.post_id = post.id
   return post.id;
 }
 
 
-/*
+/* 
 * Returns a Promise containing a dictionary obj in the form:
 * { post_id_1 : post_data_1, post_id_2 : post_data_2, ... }
 * where post_data is another obj containing the fields described in makePost,
@@ -145,17 +148,16 @@ export async function makeComment(comment_json) {
     likes: 0,
     reported: false,
     post_id: comment_json["post_id"],
-    comment_date: firebase.firestore.Timestamp.fromDate(new Date())
+    comment_date: firebase.firestore.Timestamp.fromDate(new Date()),
   })
-
   let post = db.collection("posts").doc(comment_json["post_id"]);
   post.update({comment_ids: firebase.firestore.FieldValue.arrayUnion(comment.id)});
-
+  comment.comment_id = comment.id;
   return comment.id;
 }
 
 
-/*
+/* 
 * Returns a Promise containing a dictionary obj in the form:
 * { comment_id_1 : comment_data_1, comment_id_2 : comment_data_2, ... }
 * where comment_data is another obj containing the fields described in makeComment,
@@ -170,7 +172,7 @@ export async function getComments(post_id){
   let comment_ids = post.data().comment_ids;
   for(var i = 0; i < comment_ids.length; i++){
     let comment_id = comment_ids[i];
-    let comment_data = await db.collection("comments").doc(comment_id).get();
+    const comment_data = await db.collection("comments").doc(comment_id).get();
     if (!comment_data.data().reported) {
       comments[comment_data.id] = comment_data.data();
     }
@@ -188,10 +190,11 @@ export async function getComments(post_id){
 * the comment like count and removes comment_id from the list of the user's liked comments.
 */
 export async function likeComment(comment_id, user_id){
+  console.log('comment_id = ', comment_id);
   let comment_doc = db.collection("comments").doc(comment_id);
   let comment = await comment_doc.get();
+  console.log('comment.data() = ', comment.data);
   let curr_likes = comment.data().likes;
-
   let user_doc = db.collection("users").doc(user_id);
   let user = await user_doc.get();
   if (user.data().liked_comments.includes(comment_id)) {
@@ -216,7 +219,6 @@ export async function likePost(post_id, user_id){
   let post_doc = db.collection("posts").doc(post_id);
   let post = await post_doc.get();
   let curr_likes = post.data().likes;
-
   let user_doc = db.collection("users").doc(user_id);
   let user = await user_doc.get();
   if (user.data().liked_posts.includes(post_id)) {

@@ -28,10 +28,9 @@ export default class Example extends React.Component {
     super();
     this.state = {
       pod_name: route.params.pod_name,
-      tree_health: Object.keys(IMAGES).length - 1,
+      tree_health: Object.keys(IMAGES).length,
       username: route.params.username,
     }
-
   }
 
   renderLeaf(orientation){
@@ -57,10 +56,6 @@ export default class Example extends React.Component {
     }
 
   }
-  
- shouldComponentUpdate(nextProps, nextState){
-      return nextProps.id !== this.props.id;
- }
 
  fetchPosts(){
   let posts = databaseFunctions.getPosts(this.state.pod_name.toLowerCase());
@@ -71,11 +66,17 @@ export default class Example extends React.Component {
    })
  }
 
+ componentDidMount= () =>{
+    this.fetchPosts();
+ }
+
 
   renderLeafNodes(){
     console.log(this.state.pod_name.toLowerCase());
     if(this.state.postsList == null) return;
+    let images = [];
     for (const [key,value] of Object.entries(this.state.postsList)) {
+      console.log(value.title);
         images.push(
           {
             id: key,
@@ -112,7 +113,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('left')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  username: this.state.username})}> 
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  postID: curImage.id, username: this.state.username})}> 
                 <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}source={{uri: curImage.link}}/>
                 </TouchableOpacity>
                 </View>
@@ -133,7 +134,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, username: this.state.username})}> 
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, postID: curImage.id, username: this.state.username})}> 
                 <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}} source={{uri: curImage.link}}/>
                 </TouchableOpacity>
                 </View>
@@ -145,18 +146,16 @@ export default class Example extends React.Component {
   }
 
   render() {
-
-    this.renderLeafNodes();
+    console.log("ME");
+   let imageViews = this.renderLeafNodes();
     return (
       <SafeAreaView style={{width:'100%'}}>
       <ScrollView >
-
-
       {this.state.tree_health >= 5 ?
            <View>
            <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/full_tree/full_tree_top.png')}></Image>
            <ImageBackground  resizeMode="stretch" style={{alignSelf:'center', marginLeft: 30, marginRight: 30, width: 350, height:'100%'}} source = {require('./assets/full_tree/full_tree_trunk.png')}>
-           {this.state.imageViews}
+           {imageViews}
            </ImageBackground>
            </View>
 
@@ -165,7 +164,7 @@ export default class Example extends React.Component {
             <View>
             <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/good_tree/good_tree_top.png')}></Image>
             <ImageBackground  resizeMode="stretch" style={{alignSelf:'center', marginLeft: 30, marginRight: 30, width: 350, height:'100%'}} source = {require('./assets/good_tree/good_tree_trunk.png')}>
-            {this.state.imageViews}
+            {imageViews}
             </ImageBackground>
             </View>
            :
@@ -173,14 +172,14 @@ export default class Example extends React.Component {
             <View>
             <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/fair_tree/fair_tree_top.png')}></Image>
             <ImageBackground  resizeMode="stretch" style={{alignSelf:'center', marginLeft: 30, marginRight: 30, width: 350, height:'100%'}} source = {require('./assets/fair_tree/fair_tree_trunk.png')}>
-            {this.state.imageViews}
+            {imageViews}
             </ImageBackground>
             </View>
            :
             <View>
             <Image style={{alignSelf:'center', marginTop: 30, width: 350, height:350}} source = {require('./assets/poor_tree/poor_tree_top.png')}></Image>
             <ImageBackground  resizeMode="stretch" style={{alignSelf:'center', marginLeft: 30, marginRight: 30, width: 350, height:'100%'}} source = {require('./assets/poor_tree/poor_tree_trunk.png')}>
-            {this.state.imageViews}
+            {imageViews}
             </ImageBackground>
             </View>
   }
