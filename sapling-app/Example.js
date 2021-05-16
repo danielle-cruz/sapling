@@ -70,13 +70,20 @@ export default class Example extends React.Component {
     this.fetchPosts();
  }
 
+ componentDidUpdate= (prevProps) =>{
+   console.log("update called");
+   if(prevProps !== this.props){
+    console.log("new posts fetched");
+    this.fetchPosts();
+   }
+}
 
   renderLeafNodes(){
-    console.log(this.state.pod_name.toLowerCase());
+    //console.log(this.state.pod_name.toLowerCase());
     if(this.state.postsList == null) return;
     let images = [];
     for (const [key,value] of Object.entries(this.state.postsList)) {
-      console.log(value.title);
+      //console.log(value.title);
         images.push(
           {
             id: key,
@@ -146,7 +153,6 @@ export default class Example extends React.Component {
   }
 
   render() {
-    console.log("ME");
    let imageViews = this.renderLeafNodes();
     return (
       <SafeAreaView style={{width:'100%'}}>

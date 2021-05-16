@@ -92,7 +92,6 @@ export default class App extends React.Component {
           })}/>
           <Stack.Screen name='Details' component={Details}
             options={({animationEnabled: false })}
-
             />
           <Stack.Screen name='PodsHome' component={PodsHome} options={({ headerShown: false, animationEnabled: false })}/>
           <Stack.Screen name='Example' component={Example} options={({ headerTitle: "Pod Activity",headerBackTitle: "Back"})} />

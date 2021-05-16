@@ -16,7 +16,7 @@ import {
     TextInput,
     Dimensions,
     Keyboard,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
 } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
@@ -46,14 +46,32 @@ export default class SinglePost extends React.Component {
   
    componentDidMount= () =>{
     this.fetchPostComments();
-    this.fetchUser();
    }
+
+   setLikedComments = () => {
+      let likedComments = this.state.user.liked_comments;
+      for (let [key,value] of Object.entries(this.state.commentsList)) {
+        if(likedComments.includes(value.id)){
+          this.setState({[`${value.id}`]: true});
+        } else {
+            this.setState({[`${value.id}`]: false});
+        }
+      }
+   }
+
+   setLikedPost = () => {
+     //console.log("this.state.user", this.state.user, this.state.user.liked_posts)
+    let likedPosts = this.state.user.liked_posts;
+      if(likedPosts.includes(this.state.postID)){
+        this.setState({liked: true});
+      }
+ }
 
 
   fetchPostComments(){
     let posts = databaseFunctions.getComments(this.state.postID);
     posts.then((result) => {
-      this.setState({commentsList: result});
+      this.setState({commentsList: result}, () => {this.fetchUser()});
       console.log("fetchPostComments");
       return;
     }).catch((error) => {
@@ -65,7 +83,7 @@ export default class SinglePost extends React.Component {
     let posts = databaseFunctions.getUser(this.state.username);
     posts.then((result) => {
       console.log("fetchUser()");
-      this.setState({user: result});
+      this.setState({user: result}, () => {this.setLikedComments(); this.setLikedPost()});
       return;
     }).catch((error) => {
       console.log("Error", error);
@@ -81,22 +99,39 @@ export default class SinglePost extends React.Component {
 
   toggleFlagPost = () =>{
     let prevState = this.state.flagged;
-    console.log("toggleFlagPost() ", this.state.postID);
     this.setState({flagged:!prevState});
-    databaseFunctions.reportPost(this.state.postID);
+    Alert.alert(
+      "Confirm Report Post",
+      "Clicking yes will remove this post for review by system admins",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("FlagPostCancelled"),
+        },
+        { text: "Yes", onPress: () => {console.log("toggleFlagPost()", this.state.postID); databaseFunctions.reportPost(this.state.postID); this.props.navigation.navigate("Example", {refresh: "true"})}, style: "destructive" }
+      ]
+    );
   }
 
   toggleLikeComment = (commentID) => {
-    let prevState = this.state.liked;
-    //this.setState({liked:!prevState});
-    console.log("likeComment");
     databaseFunctions.likeComment(commentID, this.state.user.user_id);
+    console.log("likeComment");
+    let prevState = this.state[commentID];
+    this.setState({[commentID]:!prevState});
   }
 
-  toggleFlagComment = (commentID) =>{
-    console.log("flagComment, ", commentID);
-    //this.setState({flagged:!prevState});
-    //databaseFunctions.reportComment(commentID);
+  toggleFlagComment = (commentID) => {
+    Alert.alert(
+      "Confirm Report Comment",
+      "Clicking yes will remove this comment for review by system admins",
+      [
+        {
+          text: "No",
+          onPress: () => console.log("FlagCommentCancelled"),
+        },
+        { text: "Yes", onPress: () => {console.log("toggleFlagComment", commentID); databaseFunctions.reportComment(commentID); this.fetchPostComments()}, style: "destructive" }
+      ]
+    );
     return;
   }
 
@@ -104,40 +139,38 @@ renderComments = () => {
     let commentViews = [];
     if(this.state.commentsList == null) return;
     for (let [key,value] of Object.entries(this.state.commentsList)) {
+      let commentID = value.id;
       commentViews.unshift(
         <View style={{flexDirection:"column", marginBottom: 30}}>
-        <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, justifyContent:'space-between'}}>
+        <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, alignItems: 'center', justifyContent:'space-between'}}>
         <Text style={{fontWeight: '600', }}>{value.username}</Text> 
-        <Text style={{marginLeft:10, fontSize:10, marginTop:3}}>{value.comment_date.toDate().toDateString().slice(4,10)}</Text> 
-       {console.log(value.comment_id)}
-        {/** 
-        {this.state.user.liked_comments.length != 0 && this.state.user.liked_comments.includes(value.comment_id)?
-          
+        <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, alignItems: 'center', justifyContent:'space-between'}}>
+        <Text style={{marginLeft:10, fontSize:10, marginTop:11, marginRight:10}}>{value.comment_date.toDate().toDateString().slice(4,10)}</Text> 
+        {this.state[commentID]?
               <Icon
                 name='heart'
                 type='MaterialCommunityIcons'
                 color='#A3B92B'
-                style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
-                onPress={this.toggleLikeComment(value.comment_id)}
-              /> 
-              
+                style = {{fontSize: 20, marginTop:10, marginRight:5, alignSelf:'flex-end'}}
+                onPress={() => this.toggleLikeComment(value.id)}
+              />
               :
               <Icon
                 name='heart-outline'
                 type='MaterialCommunityIcons'
                 color='#A3B92B'
-                style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
-                onPress={this.toggleLikeComment(value.comment_id)}
+                style = {{ fontSize: 20, marginTop:10, marginRight:5, alignSelf:'flex-end'}}
+                onPress={() => this.toggleLikeComment(value.id)}
               /> 
         }
-        */}
               <Icon
                 name='flag-outline'
                 type='MaterialCommunityIcons'
                 color='#A3B92B'
-                style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
-                onPress={this.toggleFlagComment(value.comment_id)}
+                style = {{ fontSize: 20, marginTop:10, alignSelf:'flex-end'}}
+                onPress={() => this.toggleFlagComment(value.id)}
               /> 
+        </View>
         </View>
         <Text style={{}}>{value.text}</Text>
         </View>
@@ -156,9 +189,7 @@ renderComments = () => {
     let newCommentID = databaseFunctions.makeComment(newComment);
     newCommentID.then((result) => {
       console.log("madeComment, id = ", result);
-      this.setState({curComment:""});
-      this.fetchPostComments();
-      this.setState({ state: this.state });
+      this.setState({curComment:""}, () => this.fetchPostComments());
       return;
     }).catch((error) => {
       console.log("Error", error);
@@ -171,14 +202,20 @@ renderComments = () => {
       <SafeAreaView style={{width:'100%'}}>
       <ScrollView keyboardShouldPersistTaps='handled'>
            <View style={{marginTop:30}}>
+           
            <View style={{width: 350, maxHeight:900, flexDirection:'row', justifyContent:'space-between', margin:5, alignSelf:'center'}}>
-                  <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
-                    <Image style={{width:16, height:16, marginTop:2, marginRight:2}}source = {require('./assets/defaults/profile.png')}/>
-                    <Text style={{fontSize:16, marginLeft:5}}>{this.state.curImage.poster}</Text>
-                  </View>
-                  <Text style={{fontSize:16, alignSelf:'flex-end'}}>{this.state.curImage.datePosted}</Text>
-                </View>
+            <View style={{ alignSelf:"center", marginTop:0, width:295, marginRight:5}}>
+             <Text style={{fontSize: 18, fontWeight:'500', marginTop:3}}>{this.state.curImage.title}</Text>
+             <Text style={{fontSize: 16, fontWeight:'300', marginTop:5}}>{this.state.curImage.text}sfgsfd asdfasdfas ss</Text>
+             </View>
+             <View>
+              <Text style={{fontSize:10, marginLeft:0, marginTop:15}}>{this.state.curImage.poster}</Text>
+              <Text style={{fontSize:12, marginTop:5}}>{this.state.curImage.datePosted}</Text>
+              </View>
+              </View>
+                
            <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
+           
            <View style={{width: 350, flexDirection:'row', justifyContent:'space-between', marginBottom:15, alignSelf:'center'}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
                   {this.state.liked?
