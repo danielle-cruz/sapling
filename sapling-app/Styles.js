@@ -44,6 +44,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
 
+  text: {
+    fontFamily: 'RubikRegular',
+    fontSize: 14,
+  },
+
   button: {
     margin: 10,
     padding: 15,
@@ -171,6 +176,24 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
+  /* Details */
+  previewBox: {
+    padding: '5%',
+    backgroundColor: '#FBF7F2',
+    flexDirection: 'row',
+    borderColor: '#C4C4C4',
+    borderWidth: 1,
+
+  },
+
+  previewImage: {
+    marginRight: '5%',
+    width: '25%',
+    height: undefined,
+    aspectRatio: 1,
+    resizeMode: 'cover'
+
+  }
 });
 
 export {styles}

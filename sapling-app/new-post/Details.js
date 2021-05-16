@@ -51,7 +51,8 @@ export default class Details extends React.Component {
       title: route.params.post_title,
       text: route.params.post_text,
       media: route.params.post_media,
-      type: route.params.post_type
+      type: route.params.post_type,
+      pod_name: ''
     }
   }
 
@@ -89,6 +90,7 @@ export default class Details extends React.Component {
     console.log(this.state.text)
     console.log(this.state.media)
     console.log(this.state.type)
+    console.log(this.state.pod_name)
     console.log('====')
 
 
@@ -100,9 +102,32 @@ export default class Details extends React.Component {
           keyboardVerticalOffset={(windowHeight / 20)}>
 
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={[styles.contentContainer, {padding: windowWidth / 10, paddingTop: 0}]}>
-              <View>
+
+            <View style={[styles.contentContainer, {padding: windowWidth / 10, flexGrow: 1, flexShrink: 1}]}>
+            <View style={[styles.previewBox, {width: windowWidth}]}>
+              <Image source={{ uri: this.state.media }} style={styles.previewImage}/>
+              <View style={{maxWidth: '70%'}}>
+                <Text style={styles.header1}>{this.state.title}</Text>
+                <Text
+                  numberOfLines={2}
+                  style={styles.text}>
+                  {this.state.text}
+              </Text>
               </View>
+            </View>
+
+              <TouchableOpacity
+                style={[styles.button, {width: '100%'}]}
+                onPress={() => this.setState({pod_name: 'dance'})}>
+                <Text style={styles.buttonLabel}>Dance</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={[styles.button, {width: '100%'}]}
+                onPress={() => this.setState({pod_name: 'spanish'})}>
+                <Text style={styles.buttonLabel}>Spanish</Text>
+              </TouchableOpacity>
+
               <TouchableOpacity
                 style={[styles.button, {width: '100%'}]}
                 onPress={() => this.uploadPost()}>
