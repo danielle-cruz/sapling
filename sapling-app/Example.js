@@ -95,7 +95,7 @@ export default class Example extends React.Component {
             reported: value.reported,
             datePosted: value.post_date.toDate().toDateString().slice(4,10),
             pod: value.pod_name,
-            link: value.media_url? value.media_url : "https://firebasestorage.googleapis.com/v0/b/sapling-grow.appspot.com/o/IMG_1135.jpeg?alt=media&token=85b0ad5d-84f0-4213-a6cc-3e147d45d17c",
+            link: value.media_url,
             likes:  value.likes,
             comments:  value.comment_ids,
           }

@@ -204,7 +204,7 @@ renderComments = () => {
            <View style={{marginTop:30}}>
              <View style={{width:350, alignSelf:'center'}}>
            <View style={{width: 350, maxHeight:900, flexDirection:'row', justifyContent:'space-between', margin:5, alignSelf:'center'}}>
-            <View style={{ alignSelf:"center", marginTop:0, width:195, marginRight:5}}>
+            <View style={{ alignSelf:"center", marginTop:0, width:350, marginRight:5}}>
             <View style={{flexDirection:'row',  marginTop:5}}>
              <Image style={{width:11, height:11, marginTop:1.5}} source={require('./assets/defaults/profile.png')}></Image>
              <Text style={{fontSize:11, fontWeight:'400', marginLeft:3,}}>{this.state.curImage.poster}   {this.state.curImage.datePosted}</Text>
