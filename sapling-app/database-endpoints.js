@@ -72,27 +72,18 @@ export async function getUser(username){
 * username: string
 * pod_name: string
 * media_file: File or Blob
+* media_type: string
 */
 export async function makePost(post_json) {
-
   const response = await fetch(post_json["media_file"])
   const blob = await response.blob();
-
-  /* My failed attempt lol
-  if (post_json["media_type"] === 'video') {
-    let new_media_ref = storage_ref.child(String(uuidv4()).concat(."mov"));  // provide random filename
-  } else {
-    let new_media_ref = storage_ref.child(uuidv4());  // provide random filename
-  }*/
-
-  let new_media_ref = storage_ref.child(uuidv4());  // provide random filename
+  let filename = uuidv4();  // provide random filename
+  if (post_json["media_type"] === "video") {
+    filename += ".mov";
+  }
+  let new_media_ref = storage_ref.child(filename);
   await new_media_ref.put(blob);
   let url = await new_media_ref.getDownloadURL();
-
-
-  // TODO: test media upload more thoroughly
-  // currently, something is wrong w/ files uploaded, but could be use of fetch for testing
-  // TODO: figure out how to differentiate media types
 
   const post = await db.collection("posts").add({
     title: post_json["title"],
