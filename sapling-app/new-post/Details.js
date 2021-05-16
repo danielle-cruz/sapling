@@ -70,16 +70,22 @@ export default class Details extends React.Component {
   uploadPost() {
     console.log('uploaded');
     console.log(this.state.image);
-    databaseFunctions.makePost(
-      {
-        title: this.state.title,
-        text: this.state.text,
-        accomplished_date: Date.now(),
-        username: this.state.username,
-        pod_name: 'example_pod_name',
-        media_file: this.state.image
-      }
-    );
+    try {
+      databaseFunctions.makePost(
+        {
+          title: this.state.title,
+          text: this.state.text,
+          accomplished_date: Date.now(),
+          username: this.state.username,
+          pod_name: this.state.pod_name,
+          media_file: this.state.image
+        }
+      );
+    } catch(error) {
+      console.log("Error", error);
+    }
+
+
     // NEED TO ADD DATE AND PODNAME
 
   }
@@ -117,15 +123,15 @@ export default class Details extends React.Component {
             </View>
 
               <TouchableOpacity
-                style={[styles.button, {width: '100%'}]}
+                style={this.state.pod_name === 'dance' ? [styles.button, {width: '100%'}] : [styles.unselectedButton, {width: '100%'}]}
                 onPress={() => this.setState({pod_name: 'dance'})}>
-                <Text style={styles.buttonLabel}>Dance</Text>
+                <Text style={this.state.pod_name === 'dance' ? styles.buttonLabel : styles.unselectedButtonLabel }>Dance</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={[styles.button, {width: '100%'}]}
+                style={this.state.pod_name === 'spanish' ? [styles.button, {width: '100%'}] : [styles.unselectedButton, {width: '100%'}]}
                 onPress={() => this.setState({pod_name: 'spanish'})}>
-                <Text style={styles.buttonLabel}>Spanish</Text>
+                <Text style={this.state.pod_name === 'spanish' ? styles.buttonLabel : styles.unselectedButtonLabel }>Spanish</Text>
               </TouchableOpacity>
 
               <TouchableOpacity

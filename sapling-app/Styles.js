@@ -56,12 +56,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
 
+  unselectedButton: {
+    margin: 10,
+    padding: 15,
+    borderRadius: 10,
+    backgroundColor: '#F1EEE9',
+    borderColor: '#C4C4C4',
+  },
+
   buttonLabel: {
     color: '#FFFFFF',
     fontFamily: 'RubikBold',
     fontSize: 18,
     textAlign: 'center'
+  },
 
+  unselectedButtonLabel: {
+    color: '#C4C4C4',
+    fontFamily: 'RubikBold',
+    fontSize: 18,
+    textAlign: 'center'
   },
 
   commentTextInput: {

@@ -75,6 +75,7 @@ export async function getUser(username){
 * media_type: string
 */
 export async function makePost(post_json) {
+
   const response = await fetch(post_json["media_file"])
   const blob = await response.blob();
   let filename = uuidv4();  // provide random filename
@@ -85,18 +86,24 @@ export async function makePost(post_json) {
   await new_media_ref.put(blob);
   let url = await new_media_ref.getDownloadURL();
 
-  const post = await db.collection("posts").add({
-    title: post_json["title"],
-    text: post_json["text"],
-    comment_ids: [],
-    accomplished_date: firebase.firestore.Timestamp.fromDate(post_json["accomplished_date"]),
-    username: post_json["username"],
-    likes: 0,
-    reported: false,
-    pod_name: post_json["pod_name"],
-    media_url: url,
-    post_date: firebase.firestore.Timestamp.fromDate(new Date()),
-  });
+  try {
+    const post = await db.collection("posts").add({
+      title: post_json["title"],
+      text: post_json["text"],
+      comment_ids: [],
+      accomplished_date: firebase.firestore.Timestamp.fromDate(post_json["accomplished_date"]),
+      username: post_json["username"],
+      likes: 0,
+      reported: false,
+      pod_name: post_json["pod_name"],
+      media_url: url,
+      post_date: firebase.firestore.Timestamp.fromDate(new Date()),
+    });
+  } catch (error) {
+    console.log('error')
+    console.log(error)
+  }
+
   post.post_id = post.id
   return post.id;
 }
