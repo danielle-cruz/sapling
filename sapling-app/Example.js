@@ -28,9 +28,9 @@ export default class Example extends React.Component {
     super();
     this.state = {
       pod_name: route.params.pod_name,
-      tree_health: Object.keys(IMAGES).length,
       username: route.params.username,
     }
+    this.calculateTreeHealth();
   }
 
   renderLeaf(orientation){
@@ -66,12 +66,21 @@ export default class Example extends React.Component {
    })
  }
 
+  calculateTreeHealth = () => {
+     let health = databaseFunctions.calculateTreeHealth(this.state.pod_name);
+     health.then((result) => {
+      this.setState({tree_health: result})
+      console.log("calculate tree health = ", result);
+    }).catch((error) => {
+      console.log("Error", error);
+     })
+  }
+
  componentDidMount= () =>{
     this.fetchPosts();
  }
 
  componentDidUpdate= (prevProps) =>{
-   console.log("update called");
    if(prevProps !== this.props){
     console.log("new posts fetched");
     this.fetchPosts();

@@ -72,7 +72,7 @@ export default class SinglePost extends React.Component {
     let posts = databaseFunctions.getComments(this.state.postID);
     posts.then((result) => {
       this.setState({commentsList: result}, () => {this.fetchUser()});
-      console.log("fetchPostComments");
+      console.log("fetched Post Comments");
       return;
     }).catch((error) => {
       console.log("Error", error);
@@ -82,7 +82,7 @@ export default class SinglePost extends React.Component {
    fetchUser(){
     let posts = databaseFunctions.getUser(this.state.username);
     posts.then((result) => {
-      console.log("fetchUser()");
+      console.log("fetched User");
       this.setState({user: result}, () => {this.setLikedComments(); this.setLikedPost()});
       return;
     }).catch((error) => {
@@ -92,7 +92,7 @@ export default class SinglePost extends React.Component {
 
   toggleLikePost = () =>{
     let prevState = this.state.liked;
-    console.log("toggleLikePost()", this.state.postID, this.state.user.user_id);
+    console.log("LikedPost, post_id = ", this.state.postID, "user_id = ", this.state.user.user_id);
     this.setState({liked:!prevState});
     databaseFunctions.likePost(this.state.postID, this.state.user.user_id);
   }
@@ -108,7 +108,7 @@ export default class SinglePost extends React.Component {
           text: "No",
           onPress: () => console.log("FlagPostCancelled"),
         },
-        { text: "Yes", onPress: () => {console.log("toggleFlagPost()", this.state.postID); databaseFunctions.reportPost(this.state.postID); this.props.navigation.navigate("Example", {refresh: "true"})}, style: "destructive" }
+        { text: "Yes", onPress: () => {console.log("flaged Post, id =", this.state.postID); databaseFunctions.reportPost(this.state.postID); this.props.navigation.navigate("Example", {refresh: "true"})}, style: "destructive" }
       ]
     );
   }
@@ -129,7 +129,7 @@ export default class SinglePost extends React.Component {
           text: "No",
           onPress: () => console.log("FlagCommentCancelled"),
         },
-        { text: "Yes", onPress: () => {console.log("toggleFlagComment", commentID); databaseFunctions.reportComment(commentID); this.fetchPostComments()}, style: "destructive" }
+        { text: "Yes", onPress: () => {console.log("flagged Comment, id = ", commentID); databaseFunctions.reportComment(commentID); this.fetchPostComments()}, style: "destructive" }
       ]
     );
     return;
