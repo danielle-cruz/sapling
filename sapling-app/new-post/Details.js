@@ -48,35 +48,10 @@ export default class Details extends React.Component {
     super();
     this.state = {
       username: route.params.username,
-      title: route.params.title,
-      text: route.params.text,
-      image: route.params.image,
-    }
-  }
-
-  useEffect() {
-    (async () => {
-      if (Platform.OS !== 'web') {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-          alert('Sorry, we need camera roll permissions to make this work!');
-        }
-      }
-    })();
-  }
-
-  async pickImage() {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-
-    console.log(result);
-
-    if (!result.cancelled) {
-      this.setState({ image: result.uri })
+      title: route.params.post_title,
+      text: route.params.post_text,
+      media: route.params.post_media,
+      type: route.params.post_type
     }
   }
 
@@ -109,6 +84,14 @@ export default class Details extends React.Component {
   }
 
   render() {
+    console.log('we reached the details page!')
+    console.log(this.state.title)
+    console.log(this.state.text)
+    console.log(this.state.media)
+    console.log(this.state.type)
+    console.log('====')
+
+
     return (
       <View style={styles.container}>
         <KeyboardAvoidingView
@@ -118,7 +101,15 @@ export default class Details extends React.Component {
 
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={[styles.contentContainer, {padding: windowWidth / 10, paddingTop: 0}]}>
+              <View>
+              </View>
+              <TouchableOpacity
+                style={[styles.button, {width: '100%'}]}
+                onPress={() => this.uploadPost()}>
+                <Text style={styles.buttonLabel}>Upload</Text>
+              </TouchableOpacity>
             </View>
+
           </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
       </View>

@@ -67,7 +67,9 @@ export default class Login extends React.Component {
 
   render() {
     //return(<AppLoading></AppLoading>)
-
+    if (!this.state.fontsLoaded) {
+      return (<AppLoading></AppLoading>);
+    } else {
       return (
         <View style={styles.container}>
           <KeyboardAvoidingView
@@ -107,6 +109,7 @@ export default class Login extends React.Component {
           </KeyboardAvoidingView>
         </View>
       )
+    }
   }
 }
 
