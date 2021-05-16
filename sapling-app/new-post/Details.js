@@ -39,6 +39,10 @@ let databaseFunctions = require('../database-endpoints.js');
 
 
 
+
+// GET USERNAME, TITLE, TEXT, IMAGE
+
+
 export default class Details extends React.Component {
   constructor({navigation, route}) {
     super();

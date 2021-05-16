@@ -71,9 +71,13 @@ export async function getUser(username){
 * media_file: File or Blob
 */
 export async function makePost(post_json) {
+  const response = await fetch(post_json["media_file"]);
+  const blob = await response.blob();
+
   let new_media_ref = storage_ref.child(uuidv4());  // provide random filename
-  await new_media_ref.put(post_json["media_file"]);
+  await new_media_ref.put(blob);
   let url = await new_media_ref.getDownloadURL();
+
 
   // TODO: test media upload more thoroughly
   // currently, something is wrong w/ files uploaded, but could be use of fetch for testing
@@ -83,7 +87,7 @@ export async function makePost(post_json) {
     title: post_json["title"],
     text: post_json["text"],
     comment_ids: [],
-    accomplished_date: post_json["accomplished_date"],
+    accomplished_date: firebase.firestore.Timestamp.fromDate(post_json["accomplished_date"]),
     username: post_json["username"],
     likes: 0,
     reported: false,

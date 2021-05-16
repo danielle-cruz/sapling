@@ -47,6 +47,7 @@ export default class Upload extends React.Component {
       title: '',
       text: '',
       image: null,
+      saveImage: ''
     }
   }
 
@@ -67,12 +68,13 @@ export default class Upload extends React.Component {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true
     });
 
     console.log(result);
 
     if (!result.cancelled) {
-      this.setState({ image: result.uri })
+      this.setState({ image: result.uri , saveImage: `data:image/jpeg;base64,${result}` })
     }
   }
 
@@ -87,14 +89,15 @@ export default class Upload extends React.Component {
   * pod_name: string
   * media_file: File or Blob
   */
-  uploadPost() {
+  async uploadPost() {
     console.log('uploaded');
-    console.log(this.state.image);
+
+
     databaseFunctions.makePost(
       {
         title: this.state.title,
         text: this.state.text,
-        accomplished_date: Date.now(),
+        accomplished_date: new Date(),
         username: this.state.username,
         pod_name: 'example_pod_name',
         media_file: this.state.image
@@ -113,7 +116,7 @@ export default class Upload extends React.Component {
           keyboardVerticalOffset={(windowHeight / 20)}>
 
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={[styles.contentContainer, {padding: windowWidth / 10, paddingTop: 0}]}>
+            <View style={[styles.contentContainer, {padding: windowWidth / 10}]}>
               {/* Post Title */}
               <TextInput
                 style={[styles.postTitleInput, {width: '100%'}]}
@@ -124,7 +127,7 @@ export default class Upload extends React.Component {
               />
               {/* Upload photo or video from camera roll */}
               <TouchableOpacity
-                style={[styles.uploadImageButton, {width: '100%', height: undefined, aspectRatio: 1}]}
+                style={[styles.uploadImageButton, {width: '80%', height: undefined, aspectRatio: 1}]}
                 onPress={() => this.pickImage()}>
                 {!this.state.image ?
                     <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
@@ -134,7 +137,7 @@ export default class Upload extends React.Component {
                       <Text style={styles.subtitle}>Upload a photo or video</Text>
                     </View>
                   :
-                    <Image source={{ uri: this.state.image }} style={{ width: '100%', height: undefined, aspectRatio: 1 }}/>
+                    <Image source={{ uri: this.state.image }} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>
                 }
               </TouchableOpacity>
               {/* Post text / reflection */}
@@ -145,14 +148,14 @@ export default class Upload extends React.Component {
                 maxHeight={'25%'}
                 maxLength={400}
                 onSubmitEditing = {() => Keyboard.dismiss()}
-                onChangeText = {(text) => this.setState({title: text})}
+                onChangeText = {(text) => this.setState({text: text})}
               />
 
-              {/*<TouchableOpacity
+              <TouchableOpacity
                 style={[styles.button, {width: '100%'}]}
                 onPress={() => this.uploadPost()}>
                 <Text style={styles.buttonLabel}>Next</Text>
-              </TouchableOpacity>*/}
+              </TouchableOpacity>
 
             </View>
           </TouchableWithoutFeedback>
