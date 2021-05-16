@@ -202,20 +202,19 @@ renderComments = () => {
       <SafeAreaView style={{width:'100%'}}>
       <ScrollView keyboardShouldPersistTaps='handled'>
            <View style={{marginTop:30}}>
-           
+             <View style={{width:350, alignSelf:'center'}}>
            <View style={{width: 350, maxHeight:900, flexDirection:'row', justifyContent:'space-between', margin:5, alignSelf:'center'}}>
-            <View style={{ alignSelf:"center", marginTop:0, width:295, marginRight:5}}>
-             <Text style={{fontSize: 18, fontWeight:'500', marginTop:3}}>{this.state.curImage.title}</Text>
-             <Text style={{fontSize: 16, fontWeight:'300', marginTop:5}}>{this.state.curImage.text}sfgsfd asdfasdfas ss</Text>
+            <View style={{ alignSelf:"center", marginTop:0, width:195, marginRight:5}}>
+            <View style={{flexDirection:'row',  marginTop:5}}>
+             <Image style={{width:11, height:11, marginTop:1.5}} source={require('./assets/defaults/profile.png')}></Image>
+             <Text style={{fontSize:11, fontWeight:'400', marginLeft:3,}}>{this.state.curImage.poster}   {this.state.curImage.datePosted}</Text>
              </View>
-             <View>
-              <Text style={{fontSize:10, marginLeft:0, marginTop:15}}>{this.state.curImage.poster}</Text>
-              <Text style={{fontSize:12, marginTop:5}}>{this.state.curImage.datePosted}</Text>
+             <Text style={{fontSize: 24, fontWeight:'400', marginTop:5}}>{this.state.curImage.title}</Text>
               </View>
               </View>
-                
+             <Text style={{fontSize: 16, fontWeight:'300', marginBottom:5}}>{this.state.curImage.text}</Text>
+             </View>
            <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
-           
            <View style={{width: 350, flexDirection:'row', justifyContent:'space-between', marginBottom:15, alignSelf:'center'}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
                   {this.state.liked?
