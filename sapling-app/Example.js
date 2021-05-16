@@ -70,13 +70,20 @@ export default class Example extends React.Component {
     this.fetchPosts();
  }
 
+ componentDidUpdate= (prevProps) =>{
+   console.log("update called");
+   if(prevProps !== this.props){
+    console.log("new posts fetched");
+    this.fetchPosts();
+   }
+}
 
   renderLeafNodes(){
-    console.log(this.state.pod_name.toLowerCase());
+    //console.log(this.state.pod_name.toLowerCase());
     if(this.state.postsList == null) return;
     let images = [];
     for (const [key,value] of Object.entries(this.state.postsList)) {
-      console.log(value.title);
+      //console.log(value.title);
         images.push(
           {
             id: key,
@@ -88,7 +95,7 @@ export default class Example extends React.Component {
             reported: value.reported,
             datePosted: value.post_date.toDate().toDateString().slice(4,10),
             pod: value.pod_name,
-            link: value.media_url? value.media_url : "https://firebasestorage.googleapis.com/v0/b/sapling-grow.appspot.com/o/IMG_1135.jpeg?alt=media&token=85b0ad5d-84f0-4213-a6cc-3e147d45d17c",
+            link: value.media_url,
             likes:  value.likes,
             comments:  value.comment_ids,
           }
@@ -146,7 +153,6 @@ export default class Example extends React.Component {
   }
 
   render() {
-    console.log("ME");
    let imageViews = this.renderLeafNodes();
     return (
       <SafeAreaView style={{width:'100%'}}>

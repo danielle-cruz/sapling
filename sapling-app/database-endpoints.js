@@ -159,7 +159,6 @@ export async function makeComment(comment_json) {
   })
   let post = db.collection("posts").doc(comment_json["post_id"]);
   post.update({comment_ids: firebase.firestore.FieldValue.arrayUnion(comment.id)});
-  comment.comment_id = comment.id;
   return comment.id;
 }
 
@@ -180,8 +179,9 @@ export async function getComments(post_id){
   for(var i = 0; i < comment_ids.length; i++){
     let comment_id = comment_ids[i];
     const comment_data = await db.collection("comments").doc(comment_id).get();
-    if (!comment_data.data().reported) {
+    if (comment_data.data() && !comment_data.data().reported) {
       comments[comment_data.id] = comment_data.data();
+      comments[comment_data.id].id = comment_data.id;
     }
   }
   return comments;
@@ -197,10 +197,8 @@ export async function getComments(post_id){
 * the comment like count and removes comment_id from the list of the user's liked comments.
 */
 export async function likeComment(comment_id, user_id){
-  console.log('comment_id = ', comment_id);
   let comment_doc = db.collection("comments").doc(comment_id);
   let comment = await comment_doc.get();
-  console.log('comment.data() = ', comment.data);
   let curr_likes = comment.data().likes;
   let user_doc = db.collection("users").doc(user_id);
   let user = await user_doc.get();
