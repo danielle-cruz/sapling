@@ -67,23 +67,20 @@ export default class Details extends React.Component {
   * pod_name: string
   * media_file: File or Blob
   */
-  uploadPost() {
+  async uploadPost() {
     console.log('uploaded');
-    console.log(this.state.image);
-    try {
-      databaseFunctions.makePost(
-        {
-          title: this.state.title,
-          text: this.state.text,
-          accomplished_date: Date.now(),
-          username: this.state.username,
-          pod_name: this.state.pod_name,
-          media_file: this.state.image
-        }
-      );
-    } catch(error) {
-      console.log("Error", error);
-    }
+    console.log(this.state.media);
+    databaseFunctions.makePost(
+      {
+        title: this.state.title,
+        text: this.state.text,
+        accomplished_date: new Date(),
+        username: this.state.username,
+        pod_name: this.state.pod_name,
+        media_file: this.state.media,
+        media_type: this.state.type,
+      }
+    );
 
 
     // NEED TO ADD DATE AND PODNAME

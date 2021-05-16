@@ -32,6 +32,7 @@ export default class App extends React.Component {
   constructor({navigation, route}) {
     super();
     this.state = {
+      usernamee: '',
       post_title: 'EXAMPLE TITLE',
       post_text: 'EXAMPLE TEXT',
       post_media: null,
@@ -61,7 +62,8 @@ export default class App extends React.Component {
               handleTitle: ((post_title) => this.setState({post_title: post_title})),
               handleText: ((post_text) => {this.setState({post_text: post_text})}),
               handleMedia: ((post_media) => this.setState({post_media: post_media})),
-              handleType: ((post_type) => this.setState({post_type: post_type}))
+              handleType: ((post_type) => this.setState({post_type: post_type})),
+              handleUsername: ((username) => this.setState({username: username}))
 
             }}
             options={({route, navigation}) => ({
@@ -79,6 +81,7 @@ export default class App extends React.Component {
               headerRight: () => (
                 <TouchableOpacity style={styles.headerButton}
                   onPress={() => {navigation.navigate('Details', {
+                    username: this.state.username,
                     post_title: this.state.post_title,
                     post_text: this.state.post_text,
                     post_media: this.state.post_media,
