@@ -36,6 +36,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 /* Video Thumbnail */
 import * as VideoThumbnails from 'expo-video-thumbnails';
+import { Video, AVPlaybackStatus } from 'expo-av';
 
 /* Database Endpoinst */
 let databaseFunctions = require('../database-endpoints.js');
@@ -57,6 +58,7 @@ export default class Upload extends React.Component {
       media: null,
       type: null,
       videoThumbnail: null,
+      videoStatus: {},
       handleTitle: route.params.handleTitle,
       handleText: route.params.handleText,
       handleMedia: route.params.handleMedia,
@@ -64,6 +66,7 @@ export default class Upload extends React.Component {
       handleUsername: route.params.handleUsername,
       handleVideoThumbnail: route.params.handleVideoThumbnail
     }
+    this.video = React.createRef();
     this.state.handleUsername(this.state.username);
   }
 
@@ -126,7 +129,7 @@ export default class Upload extends React.Component {
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[styles.contentContainer, {padding: windowWidth / 10}]}>
-              
+
                 {/* Post Title */}
                 <TextInput
                   style={[styles.postTitleInput, {width: '100%'}]}
@@ -152,10 +155,41 @@ export default class Upload extends React.Component {
                       </View>
                     :
                     this.state.type === 'video' ?
-                      <Image source={{uri: this.state.videoThumbnail}} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>
+                      <View style={{ width: '100%', height: undefined, aspectRatio: 1}}>
+                        <Video
+                          ref={this.video}
+                          style={{width: '100%', height: undefined, aspectRatio: 1}}
+                          source={{
+                            uri: this.state.media,
+                          }}
+                          useNativeControls
+                          resizeMode="contain"
+                          isLooping
+                          onPlaybackStatusUpdate={(status) => this.setState({videoStatus: status})}
+                        />
+                      </View>
+                      /*<Image source={{uri: this.state.videoThumbnail}} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>*/
                       :
                       <Image source={{ uri: this.state.media }} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/> }
                 </TouchableOpacity>
+
+                {/* Play / Pause button*/}
+                { this.state.type === 'video' ?
+                  <View style={{width: '80%'}}>
+                    <TouchableOpacity
+                      style={[styles.button, {width: '100%', flexDirection: 'row', marginRight: 0, marginLeft: 0, paddingTop: 10, paddingBottom: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 10}]}
+                      onPress={() => {
+                        console.log(this.state.video)
+                        this.state.videoStatus.isPlaying ? this.video.current.pauseAsync() : this.video.current.playAsync()}
+                      }>
+                      <Image
+                        style={[styles.icons, {margin: 0, marginRight: 5}]}
+                        source={this.state.videoStatus.isPlaying ? require('../assets/icons/pause-icon.png') : require('../assets/icons/play-icon.png')}/>
+                      <Text style={styles.buttonLabel}> {this.state.videoStatus.isPlaying ? 'Pause' : 'Play' }</Text>
+                    </TouchableOpacity>
+                  </View> :
+                  <View></View>
+                }
 
                 {/* Post text / reflection */}
                 <TextInput
