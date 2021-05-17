@@ -34,6 +34,9 @@ import { styles } from '../Styles.js';
 /* Image Picker */
 import * as ImagePicker from 'expo-image-picker';
 
+/* Video Thumbnail */
+import * as VideoThumbnails from 'expo-video-thumbnails';
+
 /* Database Endpoinst */
 let databaseFunctions = require('../database-endpoints.js');
 
@@ -53,15 +56,18 @@ export default class Upload extends React.Component {
       text: '',
       media: null,
       type: null,
+      videoThumbnail: null,
       handleTitle: route.params.handleTitle,
       handleText: route.params.handleText,
       handleMedia: route.params.handleMedia,
       handleType: route.params.handleType,
-      handleUsername: route.params.handleUsername
+      handleUsername: route.params.handleUsername,
+      handleVideoThumbnail: route.params.handleVideoThumbnail
     }
     this.state.handleUsername(this.state.username);
   }
 
+  /* Open up camera roll */
   useEffect() {
     (async () => {
       if (Platform.OS !== 'web') {
@@ -73,6 +79,7 @@ export default class Upload extends React.Component {
     })();
   }
 
+  /* Pick an image or video from camera roll */
   async pickImage() {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -85,41 +92,27 @@ export default class Upload extends React.Component {
       this.setState({ media: result.uri, type: result.type })
       this.state.handleMedia(result.uri)
       this.state.handleType(result.type)
+      if (this.state.type === 'video') {
+        this.generateThumbnail()
+        this.state.handleVideoThumbnail(this.state.videoThumbnail)
+      }
 
     }
   }
 
-  /*
-  * Stores a new post in the database. Returns Promise of the id of the post.
-  *
-  * Takes an object (dictionary) as input. Expected fields:
-  * title: string
-  * text: string
-  * accomplished_date: timestamp  (this is NOT necessarily the date posted)
-  * username: string
-  * pod_name: string
-  * media_file: File or Blob
-  */
-  async uploadPost() {
-    console.log('uploaded');
-
-    this.state.handlePostFields(this.state.title, this.state.text, this.state.media)
-    console.log(this.state.title)
-
-
-    /*databaseFunctions.makePost(
-      {
-        title: this.state.title,
-        text: this.state.text,
-        accomplished_date: new Date(),
-        username: this.state.username,
-        pod_name: 'example_pod_name',
-        media_file: this.state.media,
-        media_type: this.state.type,
-      }
-    );*/
-    // NEED TO ADD DATE AND PODNAME
-
+  /* Generatee a thumbnail for uploaded videos */
+  async generateThumbnail() {
+    try {
+      const { uri } = await VideoThumbnails.getThumbnailAsync(this.state.media,
+        {
+          time: 15000,
+        }
+      );
+      this.setState({videoThumbnail: uri});
+      console.log(this.state.videoThumbnail)
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   render() {
@@ -133,6 +126,7 @@ export default class Upload extends React.Component {
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[styles.contentContainer, {padding: windowWidth / 10}]}>
+              
                 {/* Post Title */}
                 <TextInput
                   style={[styles.postTitleInput, {width: '100%'}]}
@@ -144,6 +138,7 @@ export default class Upload extends React.Component {
                     this.state.handleTitle(title)
                   }}
                 />
+
                 {/* Upload photo or video from camera roll */}
                 <TouchableOpacity
                   style={[styles.uploadImageButton, {width: '80%', height: undefined, aspectRatio: 1}]}
@@ -157,12 +152,11 @@ export default class Upload extends React.Component {
                       </View>
                     :
                     this.state.type === 'video' ?
-                      <Image source={require('../assets/icons/camera-icon.png')} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>
+                      <Image source={{uri: this.state.videoThumbnail}} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>
                       :
-                      <Image source={{ uri: this.state.media }} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>
-
-                  }
+                      <Image source={{ uri: this.state.media }} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/> }
                 </TouchableOpacity>
+
                 {/* Post text / reflection */}
                 <TextInput
                   style={[styles.postTextInput, {width: '100%', height: '20%%'}]}
@@ -176,12 +170,6 @@ export default class Upload extends React.Component {
                     this.state.handleText(text)
                   }}
                 />
-
-                {/*<TouchableOpacity
-                  style={[styles.button, {width: '100%'}]}
-                  onPress={() => this.uploadPost()}>
-                  <Text style={styles.buttonLabel}>Next</Text>
-                </TouchableOpacity>*/}
 
               </View>
             </TouchableWithoutFeedback>

@@ -21,7 +21,6 @@ import PodsHome from './pods/PodsHome.js'
 import Upload from './new-post/Upload.js'
 import Details from './new-post/Details.js'
 
-
 /* Example Pages */
 import Example from './Example.js'
 
@@ -36,7 +35,8 @@ export default class App extends React.Component {
       post_title: 'EXAMPLE TITLE',
       post_text: 'EXAMPLE TEXT',
       post_media: null,
-      post_type: ''
+      post_type: '',
+      post_video_thumbnail: null
     }
   }
 
@@ -63,7 +63,9 @@ export default class App extends React.Component {
               handleText: ((post_text) => {this.setState({post_text: post_text})}),
               handleMedia: ((post_media) => this.setState({post_media: post_media})),
               handleType: ((post_type) => this.setState({post_type: post_type})),
-              handleUsername: ((username) => this.setState({username: username}))
+              handleUsername: ((username) => this.setState({username: username})),
+              handleVideoThumbnail: ((videoThumbnail) => this.setState({post_video_thumbnail: videoThumbnail}))
+
 
             }}
             options={({route, navigation}) => ({
@@ -85,7 +87,8 @@ export default class App extends React.Component {
                     post_title: this.state.post_title,
                     post_text: this.state.post_text,
                     post_media: this.state.post_media,
-                    post_type: this.state.post_type
+                    post_type: this.state.post_type,
+                    post_video_thumbnail: this.state.post_video_thumbnail
 
                   });
                   }}>

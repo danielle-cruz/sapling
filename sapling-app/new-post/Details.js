@@ -41,11 +41,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 let databaseFunctions = require('../database-endpoints.js');
 
 
-
-
-// GET USERNAME, TITLE, TEXT, IMAGE
-
-
 export default class Details extends React.Component {
   constructor({navigation, route}) {
     super();
@@ -57,7 +52,8 @@ export default class Details extends React.Component {
       type: route.params.post_type,
       accomplished_date: new Date(),
       show_date: false,
-      pod_name: ''
+      pod_name: '',
+      videoThumbnail: route.params.post_video_thumbnail
     }
   }
 
@@ -89,37 +85,33 @@ export default class Details extends React.Component {
         media_type: this.state.type,
       }
     );
-
-
-    // NEED TO ADD DATE AND PODNAME
-
   }
 
+  /* Show the date picker */
   handleDatePicker() {
     this.setState({
       show_date: true
     })
   }
 
+  /* Save selected date */
   handleDate(event, selectedDate) {
     const currentDate = selectedDate;
-    console.log("current date", currentDate)
     this.setState({
       show_date: Platform.OS === 'ios',
       accomplished_date: currentDate
     })
-
-    console.log("current date", this.state.accomplished_date)
-
   }
 
   render() {
+
+    /* Print current states */
     console.log('\nCURRENT STATES')
     console.log("title: ", this.state.title)
     console.log("text: ",this.state.text)
     console.log("media: ",this.state.media)
     console.log("type: ",this.state.type)
-    console.log("pood: ",this.state.pod_name)
+    console.log("pod: ",this.state.pod_name)
     console.log("date: ",this.state.accomplished_date)
     console.log('====')
 
@@ -134,8 +126,10 @@ export default class Details extends React.Component {
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
             <View style={[styles.contentContainer, {padding: windowWidth / 10, flexGrow: 1, flexShrink: 1}]}>
+
+            {/* Preview box */}
             <View style={[styles.previewBox, {width: windowWidth}]}>
-              <Image source={{ uri: this.state.media }} style={styles.previewImage}/>
+              <Image source={this.state.type === 'video' ? { uri: this.state.videoThumbnail } : { uri: this.state.media }} style={styles.previewImage}/>
               <View style={{maxWidth: '70%'}}>
                 <Text style={styles.header1}>{this.state.title}</Text>
                 <Text
@@ -146,6 +140,7 @@ export default class Details extends React.Component {
               </View>
             </View>
 
+            {/* Select accomplished date */}
             <TouchableOpacity
               style={[styles.button, {width: '100%'}]}
               onPress={() => this.handleDatePicker()}>
@@ -155,23 +150,17 @@ export default class Details extends React.Component {
             { this.state.show_date ?
               <DateTimePicker
               style={{width: 320, backgroundColor: "white"}}
-
                   testID="dateTimePicker"
                   value={this.state.accomplished_date}
                   mode={'date'}
                   is24Hour={true}
                   display="default"
-                  onChange={(event, selectedDate) => {
-                    console.log('entered')
-                    this.handleDate(event, selectedDate)}}
-                />
-
+                  onChange={(event, selectedDate) => {this.handleDate(event, selectedDate)}}/>
                 :
-                <View><Text>Sad</Text></View>
-
+                <View></View>
             }
 
-
+            {/* Choose a pod: Dance or Spanish */}
               <TouchableOpacity
                 style={this.state.pod_name === 'dance' ? [styles.button, {width: '100%'}] : [styles.unselectedButton, {width: '100%'}]}
                 onPress={() => this.setState({pod_name: 'dance'})}>
@@ -184,6 +173,7 @@ export default class Details extends React.Component {
                 <Text style={this.state.pod_name === 'spanish' ? styles.buttonLabel : styles.unselectedButtonLabel }>Spanish</Text>
               </TouchableOpacity>
 
+              {/* Button to Upload */}
               <TouchableOpacity
                 style={[styles.button, {width: '100%'}]}
                 onPress={() => this.uploadPost()}>
