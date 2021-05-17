@@ -71,13 +71,13 @@ export async function getUser(username){
 * accomplished_date: timestamp  (this is NOT necessarily the date posted)
 * username: string
 * pod_name: string
-* media_file: File or Blob
+* media_file: string
 * media_type: string
 */
 export async function makePost(post_json) {
   console.log(post_json)
 
-  const response = await fetch(post_json["media_file"])
+  const response = await fetch(post_json["media_file"]);
   const blob = await response.blob();
   let filename = uuidv4();  // provide random filename
   if (post_json["media_type"] === "video") {
@@ -99,8 +99,6 @@ export async function makePost(post_json) {
     media_url: url,
     post_date: firebase.firestore.Timestamp.fromDate(new Date()),
   });
-
-  post.post_id = post.id
   return post.id;
 }
 
@@ -264,7 +262,7 @@ export async function calculateTreeHealth(pod_name) {
   let five_days_ago = new Date();
   five_days_ago.setDate(five_days_ago.getDate() - 5);
   const posts = await db.collection("posts").where("reported", "==", false)
-                                            .where("pod_name", "==", pod_name)
+                                            .where("pod_name", "==", pod_name.toLowerCase())
                                             .where("post_date", ">=", five_days_ago).get();
   let num_posts = 0;
   posts.forEach(doc => {
