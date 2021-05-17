@@ -19,6 +19,7 @@ import {
 import AppLoading from 'expo-app-loading';
 import * as Font from 'expo-font';
 
+
 /* Stack Navigator*/
 import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
@@ -31,8 +32,10 @@ const windowHeight = Dimensions.get('window').height;
 /* Styles */
 import { styles } from '../Styles.js';
 
-/* Image Picker */
+/* Image and Date Time Picker */
 import * as ImagePicker from 'expo-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
 
 /* Database Endpoinst */
 let databaseFunctions = require('../database-endpoints.js');
@@ -52,6 +55,8 @@ export default class Details extends React.Component {
       text: route.params.post_text,
       media: route.params.post_media,
       type: route.params.post_type,
+      accomplished_date: new Date(),
+      show_date: false,
       pod_name: ''
     }
   }
@@ -68,13 +73,16 @@ export default class Details extends React.Component {
   * media_file: File or Blob
   */
   async uploadPost() {
+     if (this.state.pod_name === '') {
+      Alert.alert('Please select a pod.')
+    }
+
     console.log('uploaded');
-    console.log(this.state.media);
     databaseFunctions.makePost(
       {
         title: this.state.title,
         text: this.state.text,
-        accomplished_date: new Date(),
+        accomplished_date: this.state.accomplished_date,
         username: this.state.username,
         pod_name: this.state.pod_name,
         media_file: this.state.media,
@@ -87,13 +95,32 @@ export default class Details extends React.Component {
 
   }
 
+  handleDatePicker() {
+    this.setState({
+      show_date: true
+    })
+  }
+
+  handleDate(event, selectedDate) {
+    const currentDate = selectedDate;
+    console.log("current date", currentDate)
+    this.setState({
+      show_date: Platform.OS === 'ios',
+      accomplished_date: currentDate
+    })
+
+    console.log("current date", this.state.accomplished_date)
+
+  }
+
   render() {
-    console.log('we reached the details page!')
-    console.log(this.state.title)
-    console.log(this.state.text)
-    console.log(this.state.media)
-    console.log(this.state.type)
-    console.log(this.state.pod_name)
+    console.log('\nCURRENT STATES')
+    console.log("title: ", this.state.title)
+    console.log("text: ",this.state.text)
+    console.log("media: ",this.state.media)
+    console.log("type: ",this.state.type)
+    console.log("pood: ",this.state.pod_name)
+    console.log("date: ",this.state.accomplished_date)
     console.log('====')
 
 
@@ -118,6 +145,32 @@ export default class Details extends React.Component {
               </Text>
               </View>
             </View>
+
+            <TouchableOpacity
+              style={[styles.button, {width: '100%'}]}
+              onPress={() => this.handleDatePicker()}>
+              <Text style={styles.buttonLabel}>Select date accomplished</Text>
+            </TouchableOpacity>
+
+            { this.state.show_date ?
+              <DateTimePicker
+              style={{width: 320, backgroundColor: "white"}}
+
+                  testID="dateTimePicker"
+                  value={this.state.accomplished_date}
+                  mode={'date'}
+                  is24Hour={true}
+                  display="default"
+                  onChange={(event, selectedDate) => {
+                    console.log('entered')
+                    this.handleDate(event, selectedDate)}}
+                />
+
+                :
+                <View><Text>Sad</Text></View>
+
+            }
+
 
               <TouchableOpacity
                 style={this.state.pod_name === 'dance' ? [styles.button, {width: '100%'}] : [styles.unselectedButton, {width: '100%'}]}

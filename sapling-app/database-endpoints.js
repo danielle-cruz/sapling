@@ -91,7 +91,7 @@ export async function makePost(post_json) {
     title: post_json["title"],
     text: post_json["text"],
     comment_ids: [],
-    accomplished_date: post_json["accomplished_date"],
+    accomplished_date: firebase.firestore.Timestamp.fromDate(post_json["accomplished_date"]),
     username: post_json["username"],
     likes: 0,
     reported: false,

@@ -58,8 +58,6 @@ export default class Upload extends React.Component {
       handleMedia: route.params.handleMedia,
       handleType: route.params.handleType,
       handleUsername: route.params.handleUsername
-
-
     }
     this.state.handleUsername(this.state.username);
   }
