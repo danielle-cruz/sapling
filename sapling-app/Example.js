@@ -98,7 +98,7 @@ export default class Example extends React.Component {
             id: key,
             title: value.title,
             text: value.text,
-            accomplished_date: value.accomplished_date, 
+            accomplished_date: value.accomplished_date.toDate().toDateString().slice(4,10) +","+value.accomplished_date.toDate().toDateString().slice(10,15),
             poster: value.username,
             likes: value.likes,
             reported: value.reported,

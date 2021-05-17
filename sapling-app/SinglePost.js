@@ -214,12 +214,13 @@ renderComments = () => {
             <View style={{ alignSelf:"center", marginTop:0, width:350, marginRight:5}}>
             <View style={{flexDirection:'row',  marginTop:5}}>
              <Image style={{width:11, height:11, marginTop:1.5}} source={require('./assets/defaults/profile.png')}></Image>
-             <Text style={{fontSize:11, fontWeight:'400', marginLeft:3,}}>{this.state.curImage.poster}   {this.state.curImage.datePosted}</Text>
+             <Text style={{fontSize:12, fontWeight:'400', marginLeft:3,}}>{this.state.curImage.poster}   {this.state.curImage.datePosted}</Text>
              </View>
-             <Text style={{fontSize: 24, fontWeight:'400', marginTop:5}}>{this.state.curImage.title}</Text>
+             <Text style={{fontSize: 26, fontWeight:'400', marginTop:8}}>{this.state.curImage.title}</Text>
+             <Text style={{fontSize: 14, fontWeight:'300', marginTop:10}}>Accomplished: <Text style={{fontSize: 14, fontWeight:'400', marginTop:7}}> {this.state.curImage.accomplished_date}</Text></Text>
               </View>
               </View>
-             <Text style={{fontSize: 16, fontWeight:'300', marginBottom:5}}>{this.state.curImage.text}</Text>
+             <Text style={{fontSize: 16, marginTop: 5,fontWeight:'300', marginBottom:5}}>{this.state.curImage.text}</Text>
              </View>
            <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
            <View style={{width: 350, flexDirection:'row', justifyContent:'space-between', marginBottom:15, alignSelf:'center'}}>
