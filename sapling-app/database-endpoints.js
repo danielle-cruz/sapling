@@ -223,9 +223,11 @@ export async function likePost(post_id, user_id){
   if (user.data().liked_posts.includes(post_id)) {
     user_doc.update({liked_posts: firebase.firestore.FieldValue.arrayRemove(post.id)});
     post_doc.update({likes: curr_likes - 1})
+    return curr_likes - 1;
   } else {
     user_doc.update({liked_posts: firebase.firestore.FieldValue.arrayUnion(post.id)});
     post_doc.update({likes: curr_likes + 1});
+    return curr_likes + 1;
   }
 }
 

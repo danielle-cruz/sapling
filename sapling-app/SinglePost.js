@@ -61,6 +61,7 @@ export default class SinglePost extends React.Component {
 
    setLikedPost = () => {
      //console.log("this.state.user", this.state.user, this.state.user.liked_posts)
+    this.setState({postLikes: this.state.curImage.likes});
     let likedPosts = this.state.user.liked_posts;
       if(likedPosts.includes(this.state.postID)){
         this.setState({liked: true});
@@ -94,7 +95,13 @@ export default class SinglePost extends React.Component {
     let prevState = this.state.liked;
     console.log("LikedPost, post_id = ", this.state.postID, "user_id = ", this.state.user.user_id);
     this.setState({liked:!prevState});
-    databaseFunctions.likePost(this.state.postID, this.state.user.user_id);
+    let likes = databaseFunctions.likePost(this.state.postID, this.state.user.user_id);
+    likes.then((result) => {
+      console.log('likes: ', result);
+      this.setState({postLikes: result});
+    }).catch((error) => {
+      console.log("Error", error);
+    });
   }
 
   toggleFlagPost = () =>{
@@ -108,7 +115,7 @@ export default class SinglePost extends React.Component {
           text: "No",
           onPress: () => console.log("FlagPostCancelled"),
         },
-        { text: "Yes", onPress: () => {console.log("flaged Post, id =", this.state.postID); databaseFunctions.reportPost(this.state.postID); this.props.navigation.navigate("Example", {refresh: "true"})}, style: "destructive" }
+        { text: "Yes", onPress: () => {console.log("flaged Post, id =", this.state.postID); databaseFunctions.reportPost(this.state.postID); setTimeout(() => this.props.navigation.navigate("Example", {refresh: "true"}, 500))}, style: "destructive" }
       ]
     );
   }
@@ -117,7 +124,7 @@ export default class SinglePost extends React.Component {
     databaseFunctions.likeComment(commentID, this.state.user.user_id);
     console.log("likeComment");
     let prevState = this.state[commentID];
-    this.setState({[commentID]:!prevState});
+    this.setState({[commentID]:!prevState}, () => setTimeout(() => this.fetchPostComments(), 10));
   }
 
   toggleFlagComment = (commentID) => {
@@ -145,7 +152,8 @@ renderComments = () => {
         <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, alignItems: 'center', justifyContent:'space-between'}}>
         <Text style={{fontWeight: '600', }}>{value.username}</Text> 
         <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, alignItems: 'center', justifyContent:'space-between'}}>
-        <Text style={{marginLeft:10, fontSize:10, marginTop:11, marginRight:10}}>{value.comment_date.toDate().toDateString().slice(4,10)}</Text> 
+        <Text style={{marginLeft:10, fontSize:12, marginTop:12, marginRight:10}}>{value.comment_date.toDate().toDateString().slice(4,10)}</Text> 
+        <Text style={{marginLeft:10, fontSize:12, marginTop:11, marginRight:5}}>{value.likes}</Text> 
         {this.state[commentID]?
               <Icon
                 name='heart'
@@ -159,9 +167,9 @@ renderComments = () => {
                 name='heart-outline'
                 type='MaterialCommunityIcons'
                 color='#A3B92B'
-                style = {{ fontSize: 20, marginTop:10, marginRight:5, alignSelf:'flex-end'}}
+                style = {{fontSize: 20, marginTop:10, marginRight:5, alignSelf:'flex-end'}}
                 onPress={() => this.toggleLikeComment(value.id)}
-              /> 
+              />
         }
               <Icon
                 name='flag-outline'
@@ -174,7 +182,6 @@ renderComments = () => {
         </View>
         <Text style={{}}>{value.text}</Text>
         </View>
-        
   );
     }
     return commentViews;
@@ -189,7 +196,7 @@ renderComments = () => {
     let newCommentID = databaseFunctions.makeComment(newComment);
     newCommentID.then((result) => {
       console.log("madeComment, id = ", result);
-      this.setState({curComment:""}, () => this.fetchPostComments());
+      this.setState({curComment:""}, () => setTimeout(() => this.fetchPostComments(), 500));
       return;
     }).catch((error) => {
       console.log("Error", error);
@@ -217,6 +224,7 @@ renderComments = () => {
            <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
            <View style={{width: 350, flexDirection:'row', justifyContent:'space-between', marginBottom:15, alignSelf:'center'}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
+                  <Text style={{fontSize:22, marginTop:21, marginRight:5}}>{this.state.postLikes}</Text> 
                   {this.state.liked?
               <Icon
                 name='heart'
@@ -252,7 +260,7 @@ renderComments = () => {
               /> 
              }
               <TextInput
-                  style={[styles.commentTextInput, { height:50, width: 205, marginRight:10}]}
+                  style={[styles.commentTextInput, { height:50, width: 195, marginRight:10}]}
                   placeholder = 'Write a comment...'
                   autoCapitalize='none'
                   multiline={false}
