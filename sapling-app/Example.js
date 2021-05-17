@@ -88,11 +88,11 @@ export default class Example extends React.Component {
 }
 
   renderLeafNodes(){
-    //console.log(this.state.pod_name.toLowerCase());
     if(this.state.postsList == null) return;
+    let list = Object.entries(this.state.postsList);
+    list.sort(function(a, b){return b[1].post_date.toDate() - a[1].post_date.toDate()});
     let images = [];
-    for (const [key,value] of Object.entries(this.state.postsList)) {
-      //console.log(value.title);
+    for (const [key,value] of list) {
         images.push(
           {
             id: key,

@@ -61,14 +61,11 @@ export default class SinglePost extends React.Component {
    }
 
    setLikedPost = () => {
-     //console.log("this.state.user", this.state.user, this.state.user.liked_posts)
-      console.log(this.state.pod_name);
       let posts = databaseFunctions.getPosts(this.state.pod_name.toLowerCase());
       posts.then((result) => {
         for (let [key,value] of Object.entries(result)) {
         if(key == this.state.postID){
           this.setState({postLikes: value.likes});
-          console.log(value.likes);
         }
         }
       }).catch((error) => {
@@ -109,7 +106,6 @@ export default class SinglePost extends React.Component {
     this.setState({liked:!prevState});
     let likes = databaseFunctions.likePost(this.state.postID, this.state.user.user_id);
     likes.then((result) => {
-      console.log('likes: ', result);
       this.setState({postLikes: result});
     }).catch((error) => {
       console.log("Error", error);
