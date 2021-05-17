@@ -129,7 +129,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('left')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  postID: curImage.id, username: this.state.username})}> 
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}> 
                 <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}source={{uri: curImage.link}}/>
                 </TouchableOpacity>
                 </View>
@@ -150,7 +150,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, postID: curImage.id, username: this.state.username})}> 
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}> 
                 <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}} source={{uri: curImage.link}}/>
                 </TouchableOpacity>
                 </View>
@@ -162,6 +162,7 @@ export default class Example extends React.Component {
   }
 
   render() {
+    console.log("render example");
    let imageViews = this.renderLeafNodes();
     return (
       <SafeAreaView style={{width:'100%'}}>

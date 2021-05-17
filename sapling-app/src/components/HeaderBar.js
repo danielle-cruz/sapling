@@ -53,8 +53,8 @@ export default class HeaderBar extends React.Component {
         <View style={{flexDirection: 'row'}}>
           <Image
             source={require('../../assets/icons/sapling-icon.png')}
-            style={[styles.icons, {resizeMode: 'contain', marginRight: 10}]}/>
-          <Text style={styles.header1}>{this.props.username}</Text>
+            style={[styles.icons, {resizeMode: 'contain', marginRight: 10, }]}/>
+          <Text style={[styles.header1, {marginTop:5.5}]}>{this.props.username}</Text>
         </View>
         <View style={styles.barIcons}>
           <TouchableOpacity

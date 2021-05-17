@@ -76,7 +76,6 @@ export default class Login extends React.Component {
             style={{flex: 1,  backgroundColor:"white"}}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
             keyboardVerticalOffset={(windowHeight / 20)}>
-
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[styles.contentContainer, {padding: windowWidth / 10}]}>
 
@@ -84,7 +83,7 @@ export default class Login extends React.Component {
                 <View style={styles.titleContainer}>
                   <Image
                     source={require('./assets/icons/sapling-icon.png')}/>
-                  <Text style={styles.header1}>Welcome to Sapling!</Text>
+                  <Text style={[styles.header1, {marginTop:10}]}>Welcome to Sapling!</Text>
                   <Text style={[styles.subtitle, {textAlign: 'center'}]}>A growth-oriented social computing system</Text>
                 </View>
 

@@ -27,7 +27,10 @@ import PodTile from '../src/components/PodTile'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const PODS = ['Dance', 'Spanish', 'Example']
+
+let databaseFunctions = require('../database-endpoints.js');
+
+const PODS = ['Dance', 'Spanish',]
 
 
 export default class PodsHome extends React.Component {
@@ -36,7 +39,20 @@ export default class PodsHome extends React.Component {
     this.state = {
       username: route.params.username,
     }
+    this.calcTreeHealthForAllPods();
   }
+
+  calcTreeHealthForAllPods = () => {
+    for (const pod of PODS) {
+    let health = databaseFunctions.calculateTreeHealth(pod);
+    health.then((result) => {
+     this.setState({[pod]: result})
+     //console.log("calculate tree health = ", typeof(result.toString()));
+   }).catch((error) => {
+     console.log("Error", error);
+    })
+  }
+}
 
   renderPodTiles() {
     let podTiles = [];
@@ -47,6 +63,7 @@ export default class PodsHome extends React.Component {
           navigation ={this.props.navigation}
           title={pod}
           username={this.state.username}
+          tree_health= {this.state[pod]}
           />
       )
     }
@@ -55,15 +72,18 @@ export default class PodsHome extends React.Component {
 
 
   render() {
+    console.log("render podsHome");
     let podTiles = this.renderPodTiles();
     return (
       <View style={styles.container}>
         {/* Header Bar */}
         <HeaderBar navigation = {this.props.navigation} username={this.state.username}/>
+        <Text style = {{fontSize:26, fontWeight:'700', marginLeft:30, marginTop:30}}>Select Your Pod:</Text>
         <View style={[styles.tileContainer, {padding: windowWidth / 20}]}>
-
           {/* Titles */}
+          <View style={{flexDirection:"row"}}>
           {podTiles}
+          </View>
 
         </View>
       </View>

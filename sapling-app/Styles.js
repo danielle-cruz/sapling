@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
   /* Pods Homepage */
   podTile: {
     margin: 10,
-    borderColor:'#A3B92B',
     borderWidth: 4,
     borderRadius: 10,
   },

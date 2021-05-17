@@ -40,6 +40,7 @@ export default class SinglePost extends React.Component {
       liked: false,
       flagged: false,
       username: route.params.username,
+      pod_name: route.params.pod_name,
     }
    
   }
@@ -61,7 +62,18 @@ export default class SinglePost extends React.Component {
 
    setLikedPost = () => {
      //console.log("this.state.user", this.state.user, this.state.user.liked_posts)
-    this.setState({postLikes: this.state.curImage.likes});
+      console.log(this.state.pod_name);
+      let posts = databaseFunctions.getPosts(this.state.pod_name.toLowerCase());
+      posts.then((result) => {
+        for (let [key,value] of Object.entries(result)) {
+        if(key == this.state.postID){
+          this.setState({postLikes: value.likes});
+          console.log(value.likes);
+        }
+        }
+      }).catch((error) => {
+        console.log("Error", error);
+       })
     let likedPosts = this.state.user.liked_posts;
       if(likedPosts.includes(this.state.postID)){
         this.setState({liked: true});
@@ -204,6 +216,7 @@ renderComments = () => {
   }
 
   render() {
+    console.log("render singlePost")
     let commentViews = this.renderComments();
     return (
       <SafeAreaView style={{width:'100%'}}>
@@ -261,7 +274,7 @@ renderComments = () => {
               /> 
              }
               <TextInput
-                  style={[styles.commentTextInput, { height:50, width: 195, marginRight:10}]}
+                  style={[styles.commentTextInput, { height:50, width: 188, marginRight:10}]}
                   placeholder = 'Write a comment...'
                   autoCapitalize='none'
                   multiline={false}
