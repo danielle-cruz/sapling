@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 /* Stack Navigator */
 import { getPathFromState, NavigationContainer, TabRouter, useRoute } from '@react-navigation/native';
@@ -32,8 +32,8 @@ export default class App extends React.Component {
     super();
     this.state = {
       usernamee: '',
-      post_title: 'EXAMPLE TITLE',
-      post_text: 'EXAMPLE TEXT',
+      post_title: '',
+      post_text: '',
       post_media: null,
       post_type: '',
       post_video_thumbnail: null
@@ -82,15 +82,23 @@ export default class App extends React.Component {
                 ),
               headerRight: () => (
                 <TouchableOpacity style={styles.headerButton}
-                  onPress={() => {navigation.navigate('Details', {
-                    username: this.state.username,
-                    post_title: this.state.post_title,
-                    post_text: this.state.post_text,
-                    post_media: this.state.post_media,
-                    post_type: this.state.post_type,
-                    post_video_thumbnail: this.state.post_video_thumbnail
-
-                  });
+                  onPress={() => {
+                    if (this.state.post_title === '') {
+                      Alert.alert('Please include a title for your post.');
+                    } else if (this.state.post_media === null) {
+                      Alert.alert('Please attach a photo or video to your post.');
+                    } else if (this.state.post_text === '') {
+                      Alert.alert('Please write a reflection for your post.');
+                    } else {
+                      navigation.navigate('Details', {
+                        username: this.state.username,
+                        post_title: this.state.post_title,
+                        post_text: this.state.post_text,
+                        post_media: this.state.post_media,
+                        post_type: this.state.post_type,
+                        post_video_thumbnail: this.state.post_video_thumbnail
+                      });
+                    }
                   }}>
                   <Text style={styles.headerButtonText}>Next</Text>
                 </TouchableOpacity>

@@ -51,7 +51,7 @@ export default class Details extends React.Component {
       media: route.params.post_media,
       type: route.params.post_type,
       accomplished_date: new Date(),
-      show_date: false,
+      show_date: true,
       pod_name: '',
       videoThumbnail: route.params.post_video_thumbnail
     }
@@ -74,6 +74,8 @@ export default class Details extends React.Component {
     }
 
     console.log('uploaded');
+
+    /* Call database endpoint to make a post */
     databaseFunctions.makePost(
       {
         title: this.state.title,
@@ -85,6 +87,9 @@ export default class Details extends React.Component {
         media_type: this.state.type,
       }
     );
+
+    /* Navigate back to pods home */
+    this.props.navigation.navigate('PodsHome', {username: this.state.username});
   }
 
   /* Show the date picker */
@@ -98,7 +103,7 @@ export default class Details extends React.Component {
   handleDate(event, selectedDate) {
     const currentDate = selectedDate;
     this.setState({
-      show_date: Platform.OS === 'ios',
+      show_date: Platform.OS === "ios" ,
       accomplished_date: currentDate
     })
   }
@@ -106,15 +111,15 @@ export default class Details extends React.Component {
   render() {
 
     /* Print current states */
-    console.log('\nCURRENT STATES')
+    /*console.log('\nCURRENT STATES')
     console.log("title: ", this.state.title)
     console.log("text: ",this.state.text)
     console.log("media: ",this.state.media)
     console.log("type: ",this.state.type)
+    console.log("thumbnail: ",this.state.videoThumbnail)
     console.log("pod: ",this.state.pod_name)
     console.log("date: ",this.state.accomplished_date)
-    console.log('====')
-
+    console.log('====')*/
 
     return (
       <View style={styles.container}>
@@ -140,42 +145,53 @@ export default class Details extends React.Component {
               </View>
             </View>
 
-            {/* Select accomplished date */}
-            <TouchableOpacity
+            {/*<TouchableOpacity
               style={[styles.button, {width: '100%'}]}
               onPress={() => this.handleDatePicker()}>
               <Text style={styles.buttonLabel}>Select date accomplished</Text>
-            </TouchableOpacity>
+            </TouchableOpacity>*/}
+            <View style={[styles.detailsBox, {width: windowWidth}]}>
+              {/* Select accomplished date */}
+              <View style={styles.detail}>
+                <Text style={[styles.subtitle, {textAlign: 'center'}]}>Select the date you accomplished this growth</Text>
 
-            { this.state.show_date ?
-              <DateTimePicker
-              style={{width: 320, backgroundColor: "white"}}
-                  testID="dateTimePicker"
-                  value={this.state.accomplished_date}
-                  mode={'date'}
-                  is24Hour={true}
-                  display="default"
-                  onChange={(event, selectedDate) => {this.handleDate(event, selectedDate)}}/>
-                :
-                <View></View>
-            }
+                { this.state.show_date ?
+                  <DateTimePicker
+                  style={[styles.dateTime, {width: windowWidth * .75, height: windowWidth * .15}]}
+                      testID="dateTimePicker"
+                      value={this.state.accomplished_date}
+                      mode={'date'}
+                      is24Hour={true}
+                      display="default"
+                      onChange={(event, selectedDate) => {this.handleDate(event, selectedDate)}}/>
+                    :
+                    <View></View>
+                }
+              </View>
 
-            {/* Choose a pod: Dance or Spanish */}
-              <TouchableOpacity
-                style={this.state.pod_name === 'dance' ? [styles.button, {width: '100%'}] : [styles.unselectedButton, {width: '100%'}]}
-                onPress={() => this.setState({pod_name: 'dance'})}>
-                <Text style={this.state.pod_name === 'dance' ? styles.buttonLabel : styles.unselectedButtonLabel }>Dance</Text>
-              </TouchableOpacity>
+              {/* Choose a pod: Dance or Spanish */}
+              <View style={styles.detail}>
+                <Text style={[styles.subtitle, {textAlign: 'center'}]}>Select the pod to upload your growth</Text>
+                <View style={{flexDirection: 'row'}}>
+                  <TouchableOpacity
+                    style={this.state.pod_name === 'dance' ? [styles.button] : [styles.unselectedButton]}
+                    onPress={() => this.setState({pod_name: 'dance'})}>
+                    <Text style={this.state.pod_name === 'dance' ? styles.buttonLabel : styles.unselectedButtonLabel }>Dance</Text>
+                  </TouchableOpacity>
 
-              <TouchableOpacity
-                style={this.state.pod_name === 'spanish' ? [styles.button, {width: '100%'}] : [styles.unselectedButton, {width: '100%'}]}
-                onPress={() => this.setState({pod_name: 'spanish'})}>
-                <Text style={this.state.pod_name === 'spanish' ? styles.buttonLabel : styles.unselectedButtonLabel }>Spanish</Text>
-              </TouchableOpacity>
+                  <TouchableOpacity
+                    style={this.state.pod_name === 'spanish' ? [styles.button] : [styles.unselectedButton]}
+                    onPress={() => this.setState({pod_name: 'spanish'})}>
+                    <Text style={this.state.pod_name === 'spanish' ? styles.buttonLabel : styles.unselectedButtonLabel }>Spanish</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+
 
               {/* Button to Upload */}
               <TouchableOpacity
-                style={[styles.button, {width: '100%'}]}
+                style={[styles.button, {position: 'absolute', bottom: windowHeight / 10, width: '100%', alignSelf: 'center', }]}
                 onPress={() => this.uploadPost()}>
                 <Text style={styles.buttonLabel}>Upload</Text>
               </TouchableOpacity>

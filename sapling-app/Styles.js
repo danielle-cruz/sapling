@@ -192,7 +192,11 @@ const styles = StyleSheet.create({
 
   /* Details */
   previewBox: {
+    position: 'absolute',
+    top: 0,
     padding: '5%',
+    paddingTop: '10%',
+    paddingBottom: '10%',
     backgroundColor: '#FBF7F2',
     flexDirection: 'row',
     borderColor: '#C4C4C4',
@@ -206,7 +210,21 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 1,
     resizeMode: 'cover'
+  },
 
+  detailsBox: {
+    padding: '5%',
+    backgroundColor: '#FBF7F2',
+    alignItems: 'center'
+  },
+
+  detail: {
+    margin: '5%'
+  },
+
+  dateTime: {
+    margin: '5%',
+    backgroundColor: '#FBF7F2',
   }
 });
 

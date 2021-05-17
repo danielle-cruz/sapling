@@ -95,11 +95,14 @@ export default class Upload extends React.Component {
       this.setState({ media: result.uri, type: result.type })
       this.state.handleMedia(result.uri)
       this.state.handleType(result.type)
-      if (this.state.type === 'video') {
-        this.generateThumbnail()
-        this.state.handleVideoThumbnail(this.state.videoThumbnail)
-      }
 
+      /* If a video is selected, call generateThumbnail */
+      if (this.state.type === 'video') {
+        this.generateThumbnail().then(() => {
+          this.state.handleVideoThumbnail(this.state.videoThumbnail)
+          console.log('thumbnail ', this.state.videoThumbnail)
+        })
+      }
     }
   }
 
@@ -112,6 +115,7 @@ export default class Upload extends React.Component {
         }
       );
       this.setState({videoThumbnail: uri});
+      console.log('thumbnail genereated!')
       console.log(this.state.videoThumbnail)
     } catch (e) {
       console.warn(e);
@@ -143,19 +147,23 @@ export default class Upload extends React.Component {
                 />
 
                 {/* Upload photo or video from camera roll */}
-                <TouchableOpacity
-                  style={[styles.uploadImageButton, {width: '80%', height: undefined, aspectRatio: 1}]}
-                  onPress={() => this.pickImage()}>
-                  {!this.state.media ?
+
+                {!this.state.media ?
+                    <TouchableOpacity
+                      style={[styles.uploadImageButton, {width: windowWidth * .70, height: undefined, aspectRatio: 1}]}
+                      onPress={() => this.pickImage()}>
                       <View style={{flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}}>
                         <Image
                           style={{width: '20%', height: undefined, aspectRatio: 1, margin: 10, resizeMode: 'contain'}}
                           source={require('../assets/icons/camera-icon.png')}/>
                         <Text style={styles.subtitle}>Upload a photo or video</Text>
                       </View>
+                    </TouchableOpacity>
+
                     :
+
                     this.state.type === 'video' ?
-                      <View style={{ width: '100%', height: undefined, aspectRatio: 1}}>
+                      <View style={{width: windowWidth * .70, height: undefined, aspectRatio: 1}}>
                         <Video
                           ref={this.video}
                           style={{width: '100%', height: undefined, aspectRatio: 1}}
@@ -170,30 +178,28 @@ export default class Upload extends React.Component {
                       </View>
                       /*<Image source={{uri: this.state.videoThumbnail}} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>*/
                       :
-                      <Image source={{ uri: this.state.media }} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/> }
-                </TouchableOpacity>
-
+                      <Image source={{ uri: this.state.media }} style={{ width: '100%', height: undefined, aspectRatio: 1, resizeMode: 'cover'}}/>
+                }
                 {/* Play / Pause button*/}
-                { this.state.type === 'video' ?
-                  <View style={{width: '80%'}}>
+                {/* this.state.type === 'video' ?
+                  <View style={{width: '80%', justifyContent: 'center', alignItems: 'center'}}>
                     <TouchableOpacity
-                      style={[styles.button, {width: '100%', flexDirection: 'row', marginRight: 0, marginLeft: 0, paddingTop: 10, paddingBottom: 10, justifyContent: 'center', alignItems: 'center', borderRadius: 10}]}
+                      style={{position: 'absolute', bottom: windowWidth * .25, justifyContent: 'center', opacity: 0.50}}
                       onPress={() => {
                         console.log(this.state.video)
                         this.state.videoStatus.isPlaying ? this.video.current.pauseAsync() : this.video.current.playAsync()}
                       }>
                       <Image
-                        style={[styles.icons, {margin: 0, marginRight: 5}]}
+                        style={{width: windowWidth * .25, height: undefined, aspectRatio: 1}}
                         source={this.state.videoStatus.isPlaying ? require('../assets/icons/pause-icon.png') : require('../assets/icons/play-icon.png')}/>
-                      <Text style={styles.buttonLabel}> {this.state.videoStatus.isPlaying ? 'Pause' : 'Play' }</Text>
                     </TouchableOpacity>
                   </View> :
-                  <View></View>
+                  <View></View>*/
                 }
 
                 {/* Post text / reflection */}
                 <TextInput
-                  style={[styles.postTextInput, {width: '100%', height: '20%%'}]}
+                  style={[styles.postTextInput, {width: '100%', height: '20%'}]}
                   placeholder = 'Add a reflection...'
                   multiline={true}
                   maxHeight={'25%'}
