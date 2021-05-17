@@ -1,2 +1,2 @@
-npm install --global expo-cli
-expo start
+ios: npm install -D expo-cli
+web: expo start
