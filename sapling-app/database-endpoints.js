@@ -75,8 +75,6 @@ export async function getUser(username){
 * media_type: string
 */
 export async function makePost(post_json) {
-  console.log(post_json)
-
   const response = await fetch(post_json["media_file"]);
   const blob = await response.blob();
   let filename = uuidv4();  // provide random filename
@@ -97,6 +95,7 @@ export async function makePost(post_json) {
     reported: false,
     pod_name: post_json["pod_name"],
     media_url: url,
+    media_type: post_json["media_type"],
     post_date: firebase.firestore.Timestamp.fromDate(new Date()),
   });
   return post.id;
