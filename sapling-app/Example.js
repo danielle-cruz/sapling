@@ -84,6 +84,7 @@ export default class Example extends React.Component {
    if(prevProps !== this.props){
     console.log("new posts fetched");
     this.fetchPosts();
+    this.calculateTreeHealth();
    }
 }
 
@@ -117,7 +118,7 @@ export default class Example extends React.Component {
         if(i % 2 == 0){
           imageViews.push(
             /** left leaf node*/
-            <View  key = {curImage.key} style={{ alignSelf:'flex-start',marginLeft:5, marginBottom:30}}>
+            <View  key = {curImage.id} style={{ alignSelf:'flex-start',marginLeft:5, marginBottom:30}}>
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
@@ -138,11 +139,11 @@ export default class Example extends React.Component {
         } else {
           imageViews.push(
             /** right leaf node*/
-            <View key = {curImage.key} style={{ alignSelf:'flex-end',marginRight:15, marginBottom:30}}>
+            <View key = {curImage.id} style={{ alignSelf:'flex-end',marginRight:15, marginBottom:30}}>
               {/** Username of Poster and Date*/}
                 <View style={{flexDirection:'row', justifyContent:'space-between', margin:5}}>
                   <View style={{alignSelf:'flex-start', marginLeft:65, flexDirection:'row'}}>
-                    <Image style={{width:10, height:10, marginTop:1.5}}uri = {require('./assets/defaults/profile.png')}/>
+                    <Image style={{width:10, height:10, marginTop:1.5}}source = {require('./assets/defaults/profile.png')}/>
                     <Text style={{fontSize:10, marginLeft:3}}>{curImage.poster}</Text>
                   </View>
                   <Text style={{fontSize:10, alignSelf:'flex-end'}}>{curImage.datePosted}</Text>

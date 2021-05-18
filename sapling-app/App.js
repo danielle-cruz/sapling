@@ -108,7 +108,14 @@ export default class App extends React.Component {
             options={({animationEnabled: false })}
             />
           <Stack.Screen name='PodsHome' component={PodsHome} options={({ headerShown: false, animationEnabled: false })}/>
-          <Stack.Screen name='Example' component={Example} options={({ headerTitle: "Pod Activity",headerBackTitle: "Back"})} />
+          <Stack.Screen name='Example' component={Example} options={({route, navigation}) => ({headerLeft: () => (
+            <HeaderBackButton
+            labelVisible={false}
+            style={styles.headerButton}
+            onPress={() => navigation.navigate('PodsHome', {refresh:"true"})}>
+            </HeaderBackButton>
+          ),
+            headerTitle: "Pod Activity",headerBackTitle: "Back"})} />
           <Stack.Screen name='SinglePost' component={SinglePost} options={({ headerTitle: ""})} />
 
         </Stack.Navigator>
