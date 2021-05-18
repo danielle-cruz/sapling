@@ -129,7 +129,7 @@ async generateThumbnail(videoLink) {
             link: value.media_url,
             likes:  value.likes,
             comments:  value.comment_ids,
-            media_type: value.media_type
+            media_type: value.media_type,
           }
         );
     }
@@ -139,17 +139,19 @@ async generateThumbnail(videoLink) {
       let curImage = images[i];
 
       /* Generate thumbnails for videos */
-      let thumbnail;
+    /*let thumbnail;
       if (curImage.media_type === 'image') {
         thumbnail = curImage.link;
       } else {
+
         this.generateThumbnail(curImage.link).then((uri) => {
-          thumbnail = uri
-          console.log('thumbnail ', thumbnail)
+          thumbnail = require('./assets/defaults/profile.png');
+          console.log('thumbnail video: ', thumbnail);
         }).catch(error => {
           console.log("Error", error);
         })
       }
+      console.log('thumbnail post: ', thumbnail);*/
 
         if(i % 2 == 0){
           imageViews.push(
@@ -169,7 +171,7 @@ async generateThumbnail(videoLink) {
                 <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}>
                 <Image
                   style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10}}
-                  source={{uri: thumbnail}}/>
+                  source={curImage.media_type === 'image' ? {uri: curImage.link} : require('./assets/icons/thumbnail-icon.png')}/>
                 </TouchableOpacity>
                 </View>
             </View>
@@ -190,7 +192,9 @@ async generateThumbnail(videoLink) {
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
                   <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}>
-                <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}} source={{uri: curImage.link}}/>
+                <Image
+                  style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10}}
+                  source={curImage.media_type === 'image' ? {uri: curImage.link} : require('./assets/icons/thumbnail-icon.png')}/>
                 </TouchableOpacity>
                 </View>
             </View>
