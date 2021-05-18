@@ -53,7 +53,8 @@ export default class Details extends React.Component {
       accomplished_date: new Date(),
       show_date: true,
       pod_name: '',
-      videoThumbnail: route.params.post_video_thumbnail
+      videoThumbnail: route.params.post_video_thumbnail, 
+      buttonText: "Upload"
     }
   }
 
@@ -76,7 +77,7 @@ export default class Details extends React.Component {
     console.log('uploaded');
 
     /* Call database endpoint to make a post */
-    databaseFunctions.makePost(
+    let promise = databaseFunctions.makePost(
       {
         title: this.state.title,
         text: this.state.text,
@@ -87,10 +88,16 @@ export default class Details extends React.Component {
         media_type: this.state.type,
       }
     );
-
-    /* Navigate back to pods home */
-    this.props.navigation.navigate('PodsHome', {username: this.state.username});
-  }
+    this.setState({buttonText: "Uploading..."});
+    promise.then((result) => {
+      console.log("hi");
+      /* Navigate back to pods home */
+      this.props.navigation.navigate('PodsHome', {username: this.state.username, refresh: "true"});
+    }).catch((error) => {
+      console.log("Error", error);
+     })
+   }
+    
 
   /* Show the date picker */
   handleDatePicker() {
@@ -193,7 +200,7 @@ export default class Details extends React.Component {
               <TouchableOpacity
                 style={[styles.button, {position: 'absolute', bottom: windowHeight / 10, width: '100%', alignSelf: 'center', }]}
                 onPress={() => this.uploadPost()}>
-                <Text style={styles.buttonLabel}>Upload</Text>
+                <Text style={styles.buttonLabel}>{this.state.buttonText}</Text>
               </TouchableOpacity>
             </View>
 
