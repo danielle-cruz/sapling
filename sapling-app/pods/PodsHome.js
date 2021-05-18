@@ -47,7 +47,6 @@ export default class PodsHome extends React.Component {
     let health = databaseFunctions.calculateTreeHealth(pod);
     health.then((result) => {
      this.setState({[pod]: result})
-     console.log("health recalculated",pod,  result);
      //console.log("calculate tree health = ", typeof(result.toString()));
    }).catch((error) => {
      console.log("Error", error);
