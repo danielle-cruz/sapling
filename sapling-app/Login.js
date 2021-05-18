@@ -75,7 +75,7 @@ export default class Login extends React.Component {
           <KeyboardAvoidingView
             style={{flex: 1,  backgroundColor:"white"}}
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={(windowHeight / 20)}>
+            keyboardVerticalOffset={(windowHeight / 10)}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
               <View style={[styles.contentContainer, {padding: windowWidth / 10}]}>
 

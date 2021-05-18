@@ -65,8 +65,6 @@ export default class App extends React.Component {
               handleType: ((post_type) => this.setState({post_type: post_type})),
               handleUsername: ((username) => this.setState({username: username})),
               handleVideoThumbnail: ((videoThumbnail) => this.setState({post_video_thumbnail: videoThumbnail}))
-
-
             }}
             options={({route, navigation}) => ({
               animationEnabled: false,

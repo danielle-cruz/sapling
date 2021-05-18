@@ -17,6 +17,7 @@ import {
     Dimensions,
     Keyboard,
     KeyboardAvoidingView,
+    TouchableWithoutFeedback,
 } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
 import { HeaderBackButton } from '@react-navigation/stack';
@@ -215,6 +216,11 @@ renderComments = () => {
     console.log("render singlePost")
     let commentViews = this.renderComments();
     return (
+          <KeyboardAvoidingView
+            style={{flex: 1,  backgroundColor:"white"}}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={(windowHeight / 7)}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={{width:'100%'}}>
       <ScrollView keyboardShouldPersistTaps='handled'>
            <View style={{marginTop:30}}>
@@ -293,6 +299,8 @@ renderComments = () => {
            </View>
       </ScrollView>
     </SafeAreaView>
+    </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
     )
   }
 }

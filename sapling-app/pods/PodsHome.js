@@ -55,7 +55,6 @@ export default class PodsHome extends React.Component {
 }
 
 componentDidUpdate= (prevProps) =>{
-  console.log("update called", this.props.route, prevProps.route);
   if(prevProps !== this.props){
    console.log("health recalculated");
    this.calcTreeHealthForAllPods();
