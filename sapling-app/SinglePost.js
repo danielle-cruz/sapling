@@ -31,6 +31,10 @@ let databaseFunctions = require('./database-endpoints.js');
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
+/* Video */
+import { Video, AVPlaybackStatus } from 'expo-av';
+
+
 export default class SinglePost extends React.Component {
 
   constructor({route, navigation}){
@@ -43,9 +47,11 @@ export default class SinglePost extends React.Component {
       username: route.params.username,
       pod_name: route.params.pod_name,
     }
-   
+    this.video = React.createRef();
+
+
   }
-  
+
    componentDidMount= () =>{
     this.fetchPostComments();
    }
@@ -159,10 +165,10 @@ renderComments = () => {
       commentViews.unshift(
         <View style={{flexDirection:"column", marginBottom: 30}}>
         <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, alignItems: 'center', justifyContent:'space-between'}}>
-        <Text style={{fontWeight: '600', }}>{value.username}</Text> 
+        <Text style={{fontWeight: '600', }}>{value.username}</Text>
         <View style={{flexDirection:"row", marginBottom: 10, marginRight:4, alignItems: 'center', justifyContent:'space-between'}}>
-        <Text style={{marginLeft:10, fontSize:12, marginTop:12, marginRight:10}}>{value.comment_date.toDate().toDateString().slice(4,10)}</Text> 
-        <Text style={{marginLeft:10, fontSize:12, marginTop:11, marginRight:5}}>{value.likes}</Text> 
+        <Text style={{marginLeft:10, fontSize:12, marginTop:12, marginRight:10}}>{value.comment_date.toDate().toDateString().slice(4,10)}</Text>
+        <Text style={{marginLeft:10, fontSize:12, marginTop:11, marginRight:5}}>{value.likes}</Text>
         {this.state[commentID]?
               <Icon
                 name='heart'
@@ -186,7 +192,7 @@ renderComments = () => {
                 color='#A3B92B'
                 style = {{ fontSize: 20, marginTop:10, alignSelf:'flex-end'}}
                 onPress={() => this.toggleFlagComment(value.id)}
-              /> 
+              />
         </View>
         </View>
         <Text style={{}}>{value.text}</Text>
@@ -237,10 +243,30 @@ renderComments = () => {
               </View>
              <Text style={{fontSize: 16, marginTop: 5,fontWeight:'300', marginBottom:5}}>{this.state.curImage.text}</Text>
              </View>
-           <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
+
+            {/* Render post image or video */}
+            {this.state.curImage.media_type === 'image' ?
+            <Image style={{alignSelf:'center', marginTop: 5, width: 350, height:350}} source={{uri: this.state.curImage.link}}></Image>
+            :
+            <View style={{alignSelf:'center', marginTop: 5, width: 350, height:350}}>
+              <Video
+                ref={this.video}
+                style={{width: '100%', height: undefined, aspectRatio: 1}}
+                source={{
+                  uri: this.state.curImage.link,
+                }}
+                useNativeControls
+                resizeMode="contain"
+                isLooping
+                onPlaybackStatusUpdate={(status) => this.setState({videoStatus: status})}
+              />
+            </View>
+          }
+
+
            <View style={{width: 350, flexDirection:'row', justifyContent:'space-between', marginBottom:15, alignSelf:'center'}}>
                   <View style={{alignSelf:'flex-start', flexDirection:'row'}}>
-                  <Text style={{fontSize:22, marginTop:21, marginRight:5}}>{this.state.postLikes}</Text> 
+                  <Text style={{fontSize:22, marginTop:21, marginRight:5}}>{this.state.postLikes}</Text>
                   {this.state.liked?
               <Icon
                 name='heart'
@@ -248,7 +274,7 @@ renderComments = () => {
                 color='#A3B92B'
                 style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
                 onPress={this.toggleLikePost}
-              /> 
+              />
               :
               <Icon
                 name='heart-outline'
@@ -256,7 +282,7 @@ renderComments = () => {
                 color='#A3B92B'
                 style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
                 onPress={this.toggleLikePost}
-              /> 
+              />
              }
              {this.state.flagged?
               <Icon
@@ -265,7 +291,7 @@ renderComments = () => {
                 color='#A3B92B'
                 style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
                 onPress={this.toggleFlagPost}
-              /> 
+              />
               :
               <Icon
                 name='flag-outline'
@@ -273,7 +299,7 @@ renderComments = () => {
                 color='#A3B92B'
                 style = {{ fontSize: 32, marginTop:10, alignSelf:'flex-end'}}
                 onPress={this.toggleFlagPost}
-              /> 
+              />
              }
               <TextInput
                   style={[styles.commentTextInput, { height:50, width: 188, marginRight:10}]}

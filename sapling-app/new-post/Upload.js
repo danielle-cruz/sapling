@@ -106,7 +106,7 @@ export default class Upload extends React.Component {
     }
   }
 
-  /* Generatee a thumbnail for uploaded videos */
+  /* Generate a thumbnail for uploaded videos */
   async generateThumbnail() {
     try {
       const { uri } = await VideoThumbnails.getThumbnailAsync(this.state.media,

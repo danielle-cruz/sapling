@@ -22,6 +22,10 @@ import { IMAGES } from './IMAGES.js'
 import {SinglePost} from './SinglePost.js'
 let databaseFunctions = require('./database-endpoints.js');
 
+/* Video Thumbnail */
+import * as VideoThumbnails from 'expo-video-thumbnails';
+
+
 export default class Example extends React.Component {
 
   constructor({route, navigation}){
@@ -88,6 +92,23 @@ export default class Example extends React.Component {
    }
 }
 
+/* Generate a thumbnail for uploaded videos */
+async generateThumbnail(videoLink) {
+  try {
+    const { uri } = await VideoThumbnails.getThumbnailAsync(videoLink,
+      {
+        time: 15000,
+      }
+    );
+    return uri;
+    // this.setState({videoThumbnail: uri});
+    // console.log('thumbnail genereated!')
+    // console.log(this.state.videoThumbnail)
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
   renderLeafNodes(){
     if(this.state.postsList == null) return;
     let list = Object.entries(this.state.postsList);
@@ -108,6 +129,7 @@ export default class Example extends React.Component {
             link: value.media_url,
             likes:  value.likes,
             comments:  value.comment_ids,
+            media_type: value.media_type
           }
         );
     }
@@ -115,6 +137,20 @@ export default class Example extends React.Component {
     let imageViews = [];
     for(let i = 0; i < images.length; i++){
       let curImage = images[i];
+
+      /* Generate thumbnails for videos */
+      let thumbnail;
+      if (curImage.media_type === 'image') {
+        thumbnail = curImage.link;
+      } else {
+        this.generateThumbnail(curImage.link).then((uri) => {
+          thumbnail = uri
+          console.log('thumbnail ', thumbnail)
+        }).catch(error => {
+          console.log("Error", error);
+        })
+      }
+
         if(i % 2 == 0){
           imageViews.push(
             /** left leaf node*/
@@ -130,8 +166,10 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('left')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}> 
-                <Image style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10,}}source={{uri: curImage.link}}/>
+                <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage,  postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}>
+                <Image
+                  style={{width:125, height:150, marginLeft:3, marginTop:0, borderRadius:10}}
+                  source={{uri: thumbnail}}/>
                 </TouchableOpacity>
                 </View>
             </View>
@@ -151,7 +189,7 @@ export default class Example extends React.Component {
               {/** Leaf node stem, pic, and shadow*/}
               {this.renderLeaf('right')}
                 <View style={{shadowColor:'#000', shadowOpacity:0.3, shadowOffset: {width: 3, height:3}, shadowRadius:2,}}>
-                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}> 
+                  <TouchableOpacity onPress={() => this.props.navigation.navigate('SinglePost', {image: curImage, postID: curImage.id, username: this.state.username, pod_name: this.state.pod_name})}>
                 <Image style={{width:125, height:150, marginLeft:70, marginTop:0, borderRadius:10,}} source={{uri: curImage.link}}/>
                 </TouchableOpacity>
                 </View>
